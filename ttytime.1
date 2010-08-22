@@ -1,0 +1,27 @@
+.\"
+.\" This manual page is written by NAKANO Takeo <nakano@webmasters.gr.jp>
+.\"
+.TH TTYTIME 1
+.SH NAME
+ttytime \- print the time of the recorded session data by ttyrec(1)
+.SH SYNOPSIS
+.br
+.B ttytime
+.I file...
+.SH DESCRIPTION
+.B Ttytime
+tells you the time of recorded data in seconds.
+For example:
+.sp
+.RS
+.nf
+% ttytime *.tty
+    173 foo.tty
+   1832 bar.tty
+.fi
+.RE
+.SH "SEE ALSO"
+.BR script (1),
+.BR ttyrec (1),
+.BR ttyplay (1)
+

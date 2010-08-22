@@ -1,0 +1,62 @@
+.\"
+.\" This manual page is written by NAKANO Takeo <nakano@webmasters.gr.jp>
+.\"
+.TH TTYPLAY 1
+.SH NAME
+ttyplay \- player of the tty session recorded by ttyrec
+.SH SYNOPSIS
+.br
+.B ttyplay
+.I [\-s SPEED] [\-n] [\-p] file
+.br
+.SH DESCRIPTION
+.B Ttyplay
+plays the tty session in
+.IR file ,
+which was recorded previously by
+.BR ttyrec (1).
+.PP
+When
+.B \-p
+option is given,
+.B ttyplay
+output the
+.I file
+as it grows.
+It means that you can see the "live" shell session 
+running by another user.
+.PP
+If you hit any key during playback, it will go right to the next
+character typed.  This is handy when examining sessions where a user
+spends a lot of time at a prompt.
+.PP
+Additionally, there are some special keys defined:
+.TP
+.BI + " or " f
+ double the speed of playback.
+.TP
+.BI \- " or " s
+ halve the speed of playback.
+.TP
+.BI 1
+set playback to speed 1.0 again.
+
+.SH OPTIONS
+.TP
+.BI \-s " SPEED"
+multiple the playing speed by
+.I SPEED
+(default is 1).
+.TP
+.B \-n
+no wait mode.
+Ignore the timing information in
+.IR file .
+.TP
+.B \-p
+peek another person's tty session.
+.SH "SEE ALSO"
+.BR script (1),
+.BR ttyrec (1),
+.BR ttytime (1)
+
