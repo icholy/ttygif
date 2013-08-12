@@ -149,7 +149,7 @@ void ttyplayback (FILE *fp, ReadFunc read_func)
 void
 usage (void)
 {
-    printf("Usage: ttygif [OPTION] [FILE]\n");
+    printf("Usage: ttygif [FILE]\n");
     exit(EXIT_FAILURE);
 }
 
