@@ -123,7 +123,7 @@ make_cmd (char *template, int index, int delay)
     char index_str[10];
     char delay_str[10];
 
-    sprintf(index_str, "%d", index);
+    sprintf(index_str, "%05d", index);
     sprintf(delay_str, "%d", delay);
 
     cmd = str_replace(template, "{{delay}}", delay_str);
