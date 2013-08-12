@@ -70,7 +70,7 @@ ttydelay (struct timeval prev, struct timeval cur)
     if (diff.tv_sec < 0) {
       diff.tv_sec = diff.tv_usec = 0;
     }
-    return diff.tv_sec;
+    return (diff.tv_sec * 1000) + (diff.tv_usec / 1000);
 }
 
 int
@@ -117,14 +117,14 @@ clear_screen (void) {
 }
 
 char *
-make_cmd (char *template, int index, double delay)
+make_cmd (char *template, int index, int delay)
 {
     char *cmd;
     char index_str[10];
     char delay_str[10];
 
     sprintf(index_str, "%d", index);
-    sprintf(delay_str, "%f", delay);
+    sprintf(delay_str, "%d", delay);
 
     cmd = str_replace(template, "{{delay}}", delay_str);
     if (!cmd) { return NULL; }
@@ -174,6 +174,7 @@ ttyplay (FILE *fp, char *cmd_tmpl, ReadFunc read_func, WriteFunc write_func)
 
         write_func(buf, h.len);
         prev = h.tv;
+        
         free(buf);
         free(cmd);
     }
