@@ -42,10 +42,9 @@
 #include "ttyrec.h"
 #include "io.h"
 
-typedef double (*WaitFunc)    (struct timeval prev, struct timeval cur, double speed);
 typedef int    (*ReadFunc)    (FILE *fp, Header *h, char **buf);
 typedef void   (*WriteFunc)   (char *buf, int len);
-typedef void   (*ProcessFunc) (FILE *fp, double speed, ReadFunc read_func, WaitFunc wait_func);
+typedef void   (*ProcessFunc) (FILE *fp, double speed, ReadFunc read_func);
 
 struct timeval
 timeval_diff (struct timeval tv1, struct timeval tv2)
@@ -72,61 +71,6 @@ timeval_div (struct timeval tv1, double n)
     div.tv_usec = (x - (int)x) * 1000000;
 
     return div;
-}
-
-double
-ttywait (struct timeval prev, struct timeval cur, double speed)
-{
-    static struct timeval drift = {0, 0};
-    struct timeval start;
-    struct timeval diff = timeval_diff(prev, cur);
-    fd_set readfs;
-
-    gettimeofday(&start, NULL);
-
-    assert(speed != 0);
-    diff = timeval_diff(drift, timeval_div(diff, speed));
-    if (diff.tv_sec < 0) {
-        diff.tv_sec = diff.tv_usec = 0;
-    }
-
-    FD_SET(STDIN_FILENO, &readfs);
-    /* 
-     * We use select() for sleeping with subsecond precision.
-     * select() is also used to wait user's input from a keyboard.
-     *
-     * Save "diff" since select(2) may overwrite it to {0, 0}. 
-     */
-    struct timeval orig_diff = diff;
-    select(1, &readfs, NULL, NULL, &diff);
-    diff = orig_diff;  /* Restore the original diff value. */
-    if (FD_ISSET(0, &readfs)) { /* a user hits a character? */
-        char c;
-        read(STDIN_FILENO, &c, 1); /* drain the character */
-        switch (c) {
-        case '+':
-        case 'f':
-            speed *= 2;
-            break;
-        case '-':
-        case 's':
-            speed /= 2;
-            break;
-        case '1':
-            speed = 1.0;
-            break;
-        }
-        drift.tv_sec = drift.tv_usec = 0;
-    } else {
-        struct timeval stop;
-        gettimeofday(&stop, NULL);
-        /* Hack to accumulate the drift */
-        if (diff.tv_sec == 0 && diff.tv_usec == 0) {
-            diff = timeval_diff(drift, diff);  // diff = 0 - drift.
-        }
-        drift = timeval_diff(diff, timeval_diff(start, stop));
-    }
-    return speed;
 }
 
 int
@@ -168,11 +112,8 @@ ttywrite (char *buf, int len)
 }
 
 void
-ttyplay (FILE *fp, double speed, ReadFunc read_func, WriteFunc write_func, WaitFunc wait_func)
+ttyplay (FILE *fp, double speed, ReadFunc read_func, WriteFunc write_func)
 {
-    int first_time = 1;
-    struct timeval prev;
-
     int step = 0;
     char step_name [50];
     char* wid = getenv("WINDOWID");
@@ -188,31 +129,24 @@ ttyplay (FILE *fp, double speed, ReadFunc read_func, WriteFunc write_func, WaitF
             break;
         }
 
-        if (!first_time) {
-          speed = wait_func(prev, h.tv, speed);
-        }
-        first_time = 0;
-
         sprintf(step_name, "import -window %s %05d.gif", wid, step);
         system(step_name);
         step++;
 
         write_func(buf, h.len);
-        prev = h.tv;
         free(buf);
     }
 }
 
-void ttyplayback (FILE *fp, double speed, ReadFunc read_func, WaitFunc wait_func)
+void ttyplayback (FILE *fp, double speed, ReadFunc read_func)
 {
-    ttyplay(fp, speed, ttyread, ttywrite, wait_func);
+    ttyplay(fp, speed, ttyread, ttywrite);
 }
 
 void
 usage (void)
 {
     printf("Usage: ttygif [OPTION] [FILE]\n");
-    printf("  -s SPEED Set speed to SPEED [1.0]\n");
     exit(EXIT_FAILURE);
 }
 
@@ -234,7 +168,6 @@ main (int argc, char **argv)
 {
     double speed = 1.0;
     ReadFunc read_func  = ttyread;
-    WaitFunc wait_func  = ttywait;
     ProcessFunc process = ttyplayback;
     FILE *input = NULL;
     struct termios old, new;
@@ -270,7 +203,7 @@ main (int argc, char **argv)
     new.c_lflag &= ~(ICANON | ECHO | ECHONL); /* unbuffered, no echo */
     tcsetattr(0, TCSANOW, &new); /* Make it current */
 
-    process(input, speed, read_func, wait_func);
+    process(input, speed, read_func);
     tcsetattr(0, TCSANOW, &old);  /* Return terminal state */
 
     return 0;
