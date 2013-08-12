@@ -1,6 +1,5 @@
 *.o
-ttyplay
-ttyrec
-ttytime
-ttygif
 *.swp
+*.gif
+ttyrecord
+ttygif
