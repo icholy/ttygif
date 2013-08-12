@@ -1,4 +1,5 @@
-ttygif converts ttyrec files to gifs.
+
+ttygif converts a ttyrec file into gif files. It's a stripped down version of ttyplay which called `import` on every frame.
 
 **Installation:**
 
