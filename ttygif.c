@@ -163,7 +163,7 @@ ttyplay (FILE *fp, char *cmd_tmpl, ReadFunc read_func, WriteFunc write_func)
 
         cmd = make_cmd(cmd_tmpl, index, delay);
         if (!cmd) {
-          perror("malloc");
+          perror("template");
           break;
         }
 
