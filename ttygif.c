@@ -150,6 +150,7 @@ ttyplay (FILE *fp, char *cmd_tmpl, ReadFunc read_func, WriteFunc write_func)
     while (1) {
 
         char *buf;
+        char *cmd;
         Header h;
 
         if (read_func(fp, &h, &buf) == 0) {
@@ -160,7 +161,7 @@ ttyplay (FILE *fp, char *cmd_tmpl, ReadFunc read_func, WriteFunc write_func)
             delay = ttydelay(prev, h.tv);
         }
 
-        char *cmd = make_cmd(cmd_tmpl, index, delay);
+        cmd = make_cmd(cmd_tmpl, index, delay);
         if (!cmd) {
           perror("malloc");
           break;
@@ -174,7 +175,7 @@ ttyplay (FILE *fp, char *cmd_tmpl, ReadFunc read_func, WriteFunc write_func)
 
         write_func(buf, h.len);
         prev = h.tv;
-        
+
         free(buf);
         free(cmd);
     }
