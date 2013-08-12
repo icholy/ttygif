@@ -46,33 +46,6 @@ typedef int    (*ReadFunc)    (FILE *fp, Header *h, char **buf);
 typedef void   (*WriteFunc)   (char *buf, int len);
 typedef void   (*ProcessFunc) (FILE *fp, ReadFunc read_func);
 
-struct timeval
-timeval_diff (struct timeval tv1, struct timeval tv2)
-{
-    struct timeval diff;
-
-    diff.tv_sec = tv2.tv_sec - tv1.tv_sec;
-    diff.tv_usec = tv2.tv_usec - tv1.tv_usec;
-    if (diff.tv_usec < 0) {
-        diff.tv_sec--;
-        diff.tv_usec += 1000000;
-    }
-
-    return diff;
-}
-
-struct timeval
-timeval_div (struct timeval tv1, double n)
-{
-    double x = ((double)tv1.tv_sec + (double)tv1.tv_usec / 1000000.0) / n;
-    struct timeval div;
-    
-    div.tv_sec  = (int)x;
-    div.tv_usec = (x - (int)x) * 1000000;
-
-    return div;
-}
-
 int
 ttyread (FILE *fp, Header *h, char **buf)
 {
@@ -131,7 +104,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
 
         sprintf(cmd, "import -window %s %05d.gif", wid, step);
         if (system(cmd) != 0) {
-            printf("error invoking import command (is ImageMagick installed?)");
+            perror("system");
             break;
         }
         step++;
