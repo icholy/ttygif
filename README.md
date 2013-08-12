@@ -20,3 +20,12 @@ $ ttygif [FILE]
 $ convert -delay 25 -loop 0 *.gif terminal.gif
 ```
 
+The output can get a little big. I use gifsicle to cut down on the size.
+
+``` sh
+$ gifsicle --batch --optimize=3 terminal.gif
+```
+
+**Example:**
+
+![img](http://i.imgur.com/KTWIWQT.gif)
