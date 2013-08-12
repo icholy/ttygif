@@ -4,12 +4,12 @@ VERSION = 1.0.8
 
 TARGET = ttygif
 
-DIST =	ttygif.c ttyrec.h io.c io.h README Makefile 
+DIST =	ttygif.c ttyrec.h util.c util.h io.c io.h README Makefile 
 
 all: $(TARGET)
 
-ttygif: ttygif.o io.o
-	$(CC) $(CFLAGS) -o ttygif ttygif.o io.o
+ttygif: ttygif.o io.o util.o
+	$(CC) $(CFLAGS) -o ttygif ttygif.o io.o util.o
 	
 clean:
 	rm -f *.o $(TARGET) ttyrecord *~
