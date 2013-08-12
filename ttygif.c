@@ -42,13 +42,10 @@
 #include "ttyrec.h"
 #include "io.h"
 
-typedef double	(*WaitFunc)	(struct timeval prev, 
-				 struct timeval cur, 
-				 double speed);
-typedef int	(*ReadFunc)	(FILE *fp, Header *h, char **buf);
-typedef void	(*WriteFunc)	(char *buf, int len);
-typedef void	(*ProcessFunc)	(FILE *fp, double speed, 
-				 ReadFunc read_func, WaitFunc wait_func);
+typedef double (*WaitFunc)    (struct timeval prev, struct timeval cur, double speed);
+typedef int    (*ReadFunc)    (FILE *fp, Header *h, char **buf);
+typedef void   (*WriteFunc)   (char *buf, int len);
+typedef void   (*ProcessFunc) (FILE *fp, double speed, ReadFunc read_func, WaitFunc wait_func);
 
 struct timeval
 timeval_diff (struct timeval tv1, struct timeval tv2)
@@ -58,8 +55,8 @@ timeval_diff (struct timeval tv1, struct timeval tv2)
     diff.tv_sec = tv2.tv_sec - tv1.tv_sec;
     diff.tv_usec = tv2.tv_usec - tv1.tv_usec;
     if (diff.tv_usec < 0) {
-	diff.tv_sec--;
-	diff.tv_usec += 1000000;
+        diff.tv_sec--;
+        diff.tv_usec += 1000000;
     }
 
     return diff;
@@ -68,7 +65,7 @@ timeval_diff (struct timeval tv1, struct timeval tv2)
 struct timeval
 timeval_div (struct timeval tv1, double n)
 {
-    double x = ((double)tv1.tv_sec  + (double)tv1.tv_usec / 1000000.0) / n;
+    double x = ((double)tv1.tv_sec + (double)tv1.tv_usec / 1000000.0) / n;
     struct timeval div;
     
     div.tv_sec  = (int)x;
@@ -90,7 +87,7 @@ ttywait (struct timeval prev, struct timeval cur, double speed)
     assert(speed != 0);
     diff = timeval_diff(drift, timeval_div(diff, speed));
     if (diff.tv_sec < 0) {
-	diff.tv_sec = diff.tv_usec = 0;
+        diff.tv_sec = diff.tv_usec = 0;
     }
 
     FD_SET(STDIN_FILENO, &readfs);
@@ -119,15 +116,15 @@ ttywait (struct timeval prev, struct timeval cur, double speed)
             speed = 1.0;
             break;
         }
-	drift.tv_sec = drift.tv_usec = 0;
+        drift.tv_sec = drift.tv_usec = 0;
     } else {
-	struct timeval stop;
-	gettimeofday(&stop, NULL);
-	/* Hack to accumulate the drift */
-	if (diff.tv_sec == 0 && diff.tv_usec == 0) {
+        struct timeval stop;
+        gettimeofday(&stop, NULL);
+        /* Hack to accumulate the drift */
+        if (diff.tv_sec == 0 && diff.tv_usec == 0) {
             diff = timeval_diff(drift, diff);  // diff = 0 - drift.
         }
-	drift = timeval_diff(diff, timeval_diff(start, stop));
+        drift = timeval_diff(diff, timeval_diff(start, stop));
     }
     return speed;
 }
@@ -136,16 +133,16 @@ int
 ttyread (FILE *fp, Header *h, char **buf)
 {
     if (read_header(fp, h) == 0) {
-	return 0;
+        return 0;
     }
 
     *buf = malloc(h->len);
     if (*buf == NULL) {
-	perror("malloc");
+        perror("malloc");
     }
 	
     if (fread(*buf, 1, h->len, fp) == 0) {
-	perror("fread");
+        perror("fread");
     }
     return 1;
 }
@@ -157,9 +154,9 @@ ttypread (FILE *fp, Header *h, char **buf)
      * Read persistently just like tail -f.
      */
     while (ttyread(fp, h, buf) == 0) {
-	struct timeval w = {0, 250000};
-	select(0, NULL, NULL, NULL, &w);
-	clearerr(fp);
+        struct timeval w = {0, 250000};
+        select(0, NULL, NULL, NULL, &w);
+        clearerr(fp);
     }
     return 1;
 }
@@ -171,8 +168,7 @@ ttywrite (char *buf, int len)
 }
 
 void
-ttyplay (FILE *fp, double speed, ReadFunc read_func, 
-	 WriteFunc write_func, WaitFunc wait_func)
+ttyplay (FILE *fp, double speed, ReadFunc read_func, WriteFunc write_func, WaitFunc wait_func)
 {
     int first_time = 1;
     struct timeval prev;
@@ -185,30 +181,29 @@ ttyplay (FILE *fp, double speed, ReadFunc read_func,
     setbuf(fp, NULL);
 
     while (1) {
-	char *buf;
-	Header h;
+        char *buf;
+        Header h;
 
-	if (read_func(fp, &h, &buf) == 0) {
-	    break;
-	}
+        if (read_func(fp, &h, &buf) == 0) {
+            break;
+        }
 
-	if (!first_time) {
-	    speed = wait_func(prev, h.tv, speed);
-	}
-	first_time = 0;
+        if (!first_time) {
+          speed = wait_func(prev, h.tv, speed);
+        }
+        first_time = 0;
 
-  sprintf(step_name, "import -window %s %05d.gif", wid, step);
-  system(step_name);
-  step++;
+        sprintf(step_name, "import -window %s %05d.gif", wid, step);
+        system(step_name);
+        step++;
 
-	write_func(buf, h.len);
-	prev = h.tv;
-	free(buf);
+        write_func(buf, h.len);
+        prev = h.tv;
+        free(buf);
     }
 }
 
-void ttyplayback (FILE *fp, double speed, 
-		  ReadFunc read_func, WaitFunc wait_func)
+void ttyplayback (FILE *fp, double speed, ReadFunc read_func, WaitFunc wait_func)
 {
     ttyplay(fp, speed, ttyread, ttywrite, wait_func);
 }
@@ -249,22 +244,22 @@ main (int argc, char **argv)
         int ch = getopt(argc, argv, "s:np");
         if (ch == EOF) {
             break;
-	}
-	switch (ch) {
-	case 's':
-	    if (optarg == NULL) {
-		perror("-s option requires an argument");
-		exit(EXIT_FAILURE);
-	    }
-	    sscanf(optarg, "%lf", &speed);
-	    break;
-	default:
-	    usage();
-	}
+        }
+        switch (ch) {
+        case 's':
+            if (optarg == NULL) {
+                perror("-s option requires an argument");
+                exit(EXIT_FAILURE);
+            }
+            sscanf(optarg, "%lf", &speed);
+            break;
+        default:
+            usage();
+        }
     }
 
     if (optind < argc) {
-	input = efopen(argv[optind], "r");
+        input = efopen(argv[optind], "r");
     } else {
         input = input_from_stdin();
     }
