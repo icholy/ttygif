@@ -174,6 +174,10 @@ main (int argc, char **argv)
     FILE *input = NULL;
     struct termios old, new;
 
+    if (argc < 2) {
+      usage();
+    }
+
     set_progname(argv[0]);
 
     if (optind < argc) {
