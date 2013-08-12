@@ -47,6 +47,32 @@ typedef int    (*ReadFunc)    (FILE *fp, Header *h, char **buf);
 typedef void   (*WriteFunc)   (char *buf, int len);
 typedef void   (*ProcessFunc) (FILE *fp, char *cmd_tmpl, ReadFunc read_func);
 
+struct timeval
+timeval_diff (struct timeval tv1, struct timeval tv2)
+{
+    struct timeval diff;
+
+    diff.tv_sec = tv2.tv_sec - tv1.tv_sec;
+    diff.tv_usec = tv2.tv_usec - tv1.tv_usec;
+
+    if (diff.tv_usec < 0) {
+        diff.tv_sec--;
+        diff.tv_usec += 1000000;
+    }
+
+    return diff;
+}
+
+int
+ttydelay (struct timeval prev, struct timeval cur)
+{
+    struct timeval diff = timeval_diff(prev, cur);
+    if (diff.tv_sec < 0) {
+      diff.tv_sec = diff.tv_usec = 0;
+    }
+    return diff.tv_sec;
+}
+
 int
 ttyread (FILE *fp, Header *h, char **buf)
 {
@@ -112,7 +138,9 @@ make_cmd (char *template, int index, double delay)
 void
 ttyplay (FILE *fp, char *cmd_tmpl, ReadFunc read_func, WriteFunc write_func)
 {
-    int step = 0;
+    int index = 0;
+    int delay = 0;
+    struct timeval prev;
 
     clear_screen();
 
@@ -128,7 +156,11 @@ ttyplay (FILE *fp, char *cmd_tmpl, ReadFunc read_func, WriteFunc write_func)
             break;
         }
 
-        char *cmd = make_cmd(cmd_tmpl, step, 0);
+        if (index != 0) {
+            delay = ttydelay(prev, h.tv);
+        }
+
+        char *cmd = make_cmd(cmd_tmpl, index, delay);
         if (!cmd) {
           perror("malloc");
           break;
@@ -138,9 +170,10 @@ ttyplay (FILE *fp, char *cmd_tmpl, ReadFunc read_func, WriteFunc write_func)
             perror("system");
             break;
         }
-        step++;
+        index++;
 
         write_func(buf, h.len);
+        prev = h.tv;
         free(buf);
         free(cmd);
     }
@@ -178,13 +211,14 @@ main (int argc, char **argv)
     ProcessFunc process = ttyplayback;
     FILE *input = NULL;
     struct termios old, new;
+    char *cmd_template;
 
     if (argc < 3) {
       usage();
     }
 
     set_progname(argv[0]);
-    char *cmd_tmpl = argv[2];
+    cmd_template = argv[2];
 
     if (optind < argc) {
         input = efopen(argv[optind], "r");
@@ -198,7 +232,7 @@ main (int argc, char **argv)
     new.c_lflag &= ~(ICANON | ECHO | ECHONL); /* unbuffered, no echo */
     tcsetattr(0, TCSANOW, &new); /* Make it current */
 
-    process(input, cmd_tmpl, read_func);
+    process(input, cmd_template, read_func);
     tcsetattr(0, TCSANOW, &old);  /* Return terminal state */
 
     return 0;
