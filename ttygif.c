@@ -91,6 +91,9 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
     char cmd [50];
     char* wid = getenv("WINDOWID");
 
+    // clear
+    printf("\e[1;1H\e[2J");
+
     setbuf(stdout, NULL);
     setbuf(fp, NULL);
 
