@@ -44,7 +44,7 @@
 
 typedef int    (*ReadFunc)    (FILE *fp, Header *h, char **buf);
 typedef void   (*WriteFunc)   (char *buf, int len);
-typedef void   (*ProcessFunc) (FILE *fp, double speed, ReadFunc read_func);
+typedef void   (*ProcessFunc) (FILE *fp, ReadFunc read_func);
 
 struct timeval
 timeval_diff (struct timeval tv1, struct timeval tv2)
@@ -112,10 +112,10 @@ ttywrite (char *buf, int len)
 }
 
 void
-ttyplay (FILE *fp, double speed, ReadFunc read_func, WriteFunc write_func)
+ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
 {
     int step = 0;
-    char step_name [50];
+    char cmd [50];
     char* wid = getenv("WINDOWID");
 
     setbuf(stdout, NULL);
@@ -129,8 +129,11 @@ ttyplay (FILE *fp, double speed, ReadFunc read_func, WriteFunc write_func)
             break;
         }
 
-        sprintf(step_name, "import -window %s %05d.gif", wid, step);
-        system(step_name);
+        sprintf(cmd, "import -window %s %05d.gif", wid, step);
+        if (system(cmd) != 0) {
+            printf("error invoking import command (is ImageMagick installed?)");
+            break;
+        }
         step++;
 
         write_func(buf, h.len);
@@ -138,9 +141,9 @@ ttyplay (FILE *fp, double speed, ReadFunc read_func, WriteFunc write_func)
     }
 }
 
-void ttyplayback (FILE *fp, double speed, ReadFunc read_func)
+void ttyplayback (FILE *fp, ReadFunc read_func)
 {
-    ttyplay(fp, speed, ttyread, ttywrite);
+    ttyplay(fp, ttyread, ttywrite);
 }
 
 void
@@ -166,30 +169,12 @@ input_from_stdin (void)
 int 
 main (int argc, char **argv)
 {
-    double speed = 1.0;
     ReadFunc read_func  = ttyread;
     ProcessFunc process = ttyplayback;
     FILE *input = NULL;
     struct termios old, new;
 
     set_progname(argv[0]);
-    while (1) {
-        int ch = getopt(argc, argv, "s:np");
-        if (ch == EOF) {
-            break;
-        }
-        switch (ch) {
-        case 's':
-            if (optarg == NULL) {
-                perror("-s option requires an argument");
-                exit(EXIT_FAILURE);
-            }
-            sscanf(optarg, "%lf", &speed);
-            break;
-        default:
-            usage();
-        }
-    }
 
     if (optind < argc) {
         input = efopen(argv[optind], "r");
@@ -203,7 +188,7 @@ main (int argc, char **argv)
     new.c_lflag &= ~(ICANON | ECHO | ECHONL); /* unbuffered, no echo */
     tcsetattr(0, TCSANOW, &new); /* Make it current */
 
-    process(input, speed, read_func);
+    process(input, read_func);
     tcsetattr(0, TCSANOW, &old);  /* Return terminal state */
 
     return 0;
