@@ -2,7 +2,7 @@
 
 output=${1-"output.gif"}
 
-if [ -e ! $output ]; then
+if [ ! -e $output ]; then
   echo "[-] $output does not exist"
   exit
 fi
@@ -16,8 +16,8 @@ for gif in *.gif; do
     fi
 
     name=${gif%.gif};
-    index=$(echo ${name%-*} | sed 's/0*//')
-    delay=$((${name#*-}))
+    index=$(echo ${name%_*} | sed 's/0*//')
+    delay=$((${name#*_}))
     ticks=$(echo "$delay * 0.1" | bc)
 
     if [ -z "$index" ]; then
