@@ -2,11 +2,6 @@
 
 output=${1-"output.gif"}
 
-if [ ! -e "$ttyfile" ]; then
-    echo "file $ttyfile does not exist"
-    exit
-fi
-
 gifs=$(find . -name '*.gif' | sort | xargs)
 
 _CONVERT="convert "
