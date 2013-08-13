@@ -2,20 +2,14 @@
 
 output=${1-"output.gif"}
 
-if [ ! -e $output ]; then
-  echo "[-] $output does not exist"
-  exit
-fi
+gifs=$(find . -name '*.gif' | sort | xargs)
 
-echo "[+] setting frame delays ..."
+_CONVERT="convert "
 
-for gif in *.gif; do
+for gif in $gifs; do
 
-    if [ $gif == $output ]; then
-      continue
-    fi
-
-    name=${gif%.gif};
+    file=${gif##*/}
+    name=${file%.gif}
     index=$(echo ${name%_*} | sed 's/0*//')
     delay=$((${name#*_}))
     ticks=$(echo "$delay * 0.1" | bc)
@@ -24,13 +18,11 @@ for gif in *.gif; do
       index=0
     fi
 
-    echo "frame: $index, delay: $delay, ticks: $ticks"
-
-    convert $output \( -clone $index -set delay $ticks \) -swap $index +delete \( +clone -set delay $ticks \) +swap +delete $output
-
-    if [ $? -ne 0 ]; then
-      echo "[-] error setting frame delay"
-      exit
-    fi
-
+    _CONVERT="${_CONVERT} -delay $ticks $gif"
 done;
+
+_CONVERT="${_CONVERT} -layers Optimize $output"
+
+echo "creating animated gif: $output"
+
+eval "$_CONVERT"
