@@ -27,3 +27,6 @@ Create animated gif
 $ ./concat.sh terminal.gif 
 ```
 
+**Example:**
+
+![gif](http://i.imgur.com/WyFoHXZ.gif)
