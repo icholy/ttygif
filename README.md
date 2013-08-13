@@ -24,21 +24,6 @@ $ ./ttygif [FILE]
 Create animated gif
 
 ``` sh
-$ convert -delay 25 -loop 0 *.gif terminal.gif
+$ ./concat.sh terminal.gif 
 ```
 
-Set correct frame delays
-
-``` sh
-$ ./set_delays.sh terminal.gif
-```
-
-Optimize output
-
-``` sh
-$ gifsicle --batch --optimize=3 terminal.gif
-```
-
-**Example:**
-
-![img](http://i.imgur.com/KTWIWQT.gif)
