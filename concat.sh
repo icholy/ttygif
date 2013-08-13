@@ -4,7 +4,7 @@ output=${1-"output.gif"}
 
 gifs=$(find . -name '*.gif' | sort | xargs)
 
-_CONVERT="convert "
+_CONVERT="convert -loop 0 "
 
 for gif in $gifs; do
 
