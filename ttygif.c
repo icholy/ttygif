@@ -115,6 +115,22 @@ clear_screen (void) {
     printf("\e[1;1H\e[2J");
 }
 
+int
+take_snapshot(int index, int delay, char* window_id)
+{
+  static char cmd [256];
+
+  if (sprintf(cmd, "import -window %s %05d_%d.gif", window_id, index, delay) < 0) {
+      return -1;
+  }
+
+  if (system(cmd) != 0) {
+      return -1;
+  }
+
+  return 0;
+}
+
 void
 ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
 {
@@ -128,7 +144,6 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
     setbuf(fp, NULL);
 
     char* wid = getenv("WINDOWID");
-    char cmd [256];
 
     while (1) {
 
@@ -143,15 +158,11 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
             delay = ttydelay(prev, h.tv);
         }
 
-        if (sprintf(cmd, "import -window %s %05d_%d.gif", wid, index, delay) < 0) {
-          perror("cmd");
-          break;
-        }
-
-        if (system(cmd) != 0) {
-            perror("system");
+        if (take_snapshot(index, delay, wid) != 0) {
+            perror("snapshot");
             break;
         }
+
         index++;
 
         write_func(buf, h.len);
