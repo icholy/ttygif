@@ -45,4 +45,4 @@ $ ./concat.sh terminal.gif
 
 ## Credits
 
-The idea and approach was taken from [tty2gif](https://bitbucket.org/antocuni/tty2gif)
+The idea and approach was adapted from [tty2gif](https://bitbucket.org/antocuni/tty2gif)
