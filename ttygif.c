@@ -94,6 +94,7 @@ void
 ttywrite (char *buf, int len)
 {
     fwrite(buf, 1, len, stdout);
+    fflush(stdout);
 }
 
 void
@@ -140,20 +141,19 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
             break;
         }
 
-        if (take_snapshot(index, delay, wid) != 0) {
-            perror("snapshot");
-            break;
-        }
+        write_func(buf, h.len);
 
         if (index != 0) {
             delay = ttydelay(prev, h.tv);
         }
 
+        if (take_snapshot(index, delay, wid) != 0) {
+            perror("snapshot");
+            break;
+        }
+
         index++;
-
-        write_func(buf, h.len);
         prev = h.tv;
-
         free(buf);
     }
 }
