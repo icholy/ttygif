@@ -7,10 +7,10 @@ ttygif converts a ttyrec file into gif files. It's a stripped down version of tt
 $ make
 ```
 
-**Prerequisites:** [ImageMagick](http://www.imagemagick.org/script/index.php)
+**Prerequisites:**
 
 ``` sh
-$ sudo apt-get install imagemagick
+$ sudo apt-get install imagemagick ttyrec
 ```
 
 **Usage:**
