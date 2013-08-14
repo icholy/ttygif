@@ -4,8 +4,6 @@ VERSION = 1.0.8
 
 TARGET = ttygif
 
-DIST =	ttygif.c ttyrec.h io.c io.h README Makefile 
-
 all: $(TARGET)
 
 ttygif: ttygif.o io.o 
@@ -13,12 +11,3 @@ ttygif: ttygif.o io.o
 	
 clean:
 	rm -f *.o $(TARGET) ttyrecord *~
-
-dist:
-	rm -rf ttyrec-$(VERSION)
-	rm -f ttyrec-$(VERSION).tar.gz
-
-	mkdir ttyrec-$(VERSION)
-	cp $(DIST) ttyrec-$(VERSION)
-	tar zcf ttyrec-$(VERSION).tar.gz  ttyrec-$(VERSION)
-	rm -rf ttyrec-$(VERSION)
