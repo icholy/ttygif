@@ -1,5 +1,7 @@
+# TTYGIF
 
-ttygif converts a ttyrec file into gif files. It's a stripped down version of ttyplay which calls `import` on every frame.
+> ttygif converts a ttyrec file into gif files.
+> It's a stripped down version of ttyplay which calls `import` on every frame.
 
 ## Installation:
 
@@ -12,8 +14,6 @@ $ make
 ``` sh
 $ sudo apt-get install imagemagick ttyrec
 ```
-
-
 
 ## Usage:
 
@@ -40,7 +40,7 @@ $ ./ttygif myrecording
 $ ./concat.sh terminal.gif 
 ```
 
-* concatonates all the images in the current directory
+* concatenates all the images in the current directory
 
 **Example:**
 
