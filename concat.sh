@@ -28,10 +28,10 @@ for gif in $gifs; do
 
     prev_delay=$delay
 
-    _convert="${_convert} -delay $delay $gif"
+    _convert="$_convert -delay $delay $gif"
 done;
 
-_convert="${_convert} -layers Optimize $output"
+_convert="$_convert -layers Optimize $output"
 
 echo "creating animated gif: $output"
 
