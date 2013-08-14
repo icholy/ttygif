@@ -39,9 +39,9 @@ $ ./concat.sh terminal.gif
 
 * Concatenates all the images in the current directory
 
-**Example:**
+## Demo:
 
-![gif](http://i.imgur.com/WyFoHXZ.gif)
+![gif](http://i.imgur.com/kS18GFq.gif)
 
 ## Credits
 
