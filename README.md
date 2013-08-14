@@ -28,7 +28,7 @@ $ ttyrec myrecording
 $ ./ttygif myrecording
 ```
 
-* dumps a bunch of gif images into the current directory.
+* Dumps a bunch of gif images into the current directory.
 * File names have this pattern: `<zero_padded_index>_<delay_in_milliseconds>.gif`
 
 **3. Create animated gif**
@@ -37,7 +37,7 @@ $ ./ttygif myrecording
 $ ./concat.sh terminal.gif 
 ```
 
-* concatenates all the images in the current directory
+* Concatenates all the images in the current directory
 
 **Example:**
 
