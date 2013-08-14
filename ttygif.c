@@ -170,19 +170,6 @@ usage (void)
     exit(EXIT_FAILURE);
 }
 
-/*
- * We do some tricks so that select(2) properly works on
- * STDIN_FILENO in ttywait().
- */
-FILE *
-input_from_stdin (void)
-{
-    FILE *fp;
-    int fd = edup(STDIN_FILENO);
-    edup2(STDOUT_FILENO, STDIN_FILENO);
-    return efdopen(fd, "r");
-}
-
 int 
 main (int argc, char **argv)
 {
@@ -196,12 +183,8 @@ main (int argc, char **argv)
     }
 
     set_progname(argv[0]);
-
-    if (optind < argc) {
-        input = efopen(argv[optind], "r");
-    } else {
-        input = input_from_stdin();
-    }
+    input = efopen(argv[1], "r");
+    
     assert(input != NULL);
 
     tcgetattr(0, &old); /* Get current terminal state */
