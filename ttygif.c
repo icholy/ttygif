@@ -90,20 +90,6 @@ ttyread (FILE *fp, Header *h, char **buf)
     return 1;
 }
 
-int
-ttypread (FILE *fp, Header *h, char **buf)
-{
-    /*
-     * Read persistently just like tail -f.
-     */
-    while (ttyread(fp, h, buf) == 0) {
-        struct timeval w = {0, 250000};
-        select(0, NULL, NULL, NULL, &w);
-        clearerr(fp);
-    }
-    return 1;
-}
-
 void
 ttywrite (char *buf, int len)
 {
@@ -154,13 +140,13 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
             break;
         }
 
-        if (index != 0) {
-            delay = ttydelay(prev, h.tv);
-        }
-
         if (take_snapshot(index, delay, wid) != 0) {
             perror("snapshot");
             break;
+        }
+
+        if (index != 0) {
+            delay = ttydelay(prev, h.tv);
         }
 
         index++;
