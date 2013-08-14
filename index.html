@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ttygif by icholy</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Ttygif</h1>
+        <p>Convert terminal recordings to animated gifs</p>
+
+        <p class="view"><a href="https://github.com/icholy/ttygif">View the Project on GitHub <small>icholy/ttygif</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/icholy/ttygif/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/icholy/ttygif/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/icholy/ttygif">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="ttygif" class="anchor" href="#ttygif"><span class="octicon octicon-link"></span></a>TTYGIF</h1>
+
+<blockquote>
+<p>ttygif converts a ttyrec file into gif files.
+It's a stripped down version of ttyplay which calls <code>import</code> on every frame.</p>
+</blockquote>
+
+<h2>
+<a name="setup" class="anchor" href="#setup"><span class="octicon octicon-link"></span></a>Setup</h2>
+
+<div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install imagemagick ttyrec
+<span class="nv">$ </span>git clone git@github.com:icholy/ttygif.git
+<span class="nv">$ </span><span class="nb">cd </span>ttygif
+<span class="nv">$ </span>make
+</pre></div>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage:</h2>
+
+<p><strong>1. Create ttyrec recording</strong></p>
+
+<div class="highlight"><pre><span class="nv">$ </span>ttyrec myrecording
+</pre></div>
+
+<ul>
+<li>Hit CTRL-D or type <code>exit</code> when done recording.</li>
+</ul><p><strong>2. Create gif frames</strong></p>
+
+<div class="highlight"><pre><span class="nv">$ </span>./ttygif myrecording
+</pre></div>
+
+<ul>
+<li>Dumps a bunch of gif images into the current directory.</li>
+<li>File names have this pattern: <code>&lt;zero_padded_index&gt;_&lt;delay_in_milliseconds&gt;.gif</code>
+</li>
+</ul><p><strong>3. Create animated gif</strong></p>
+
+<div class="highlight"><pre><span class="nv">$ </span>./concat.sh terminal.gif 
+</pre></div>
+
+<ul>
+<li>Concatenates all the images in the current directory</li>
+</ul><p><strong>Example:</strong></p>
+
+<p><img src="http://i.imgur.com/WyFoHXZ.gif" alt="gif"></p>
+
+<h2>
+<a name="credits" class="anchor" href="#credits"><span class="octicon octicon-link"></span></a>Credits</h2>
+
+<p>The idea and approach was adapted from <a href="https://bitbucket.org/antocuni/tty2gif">tty2gif</a></p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/icholy">icholy</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
