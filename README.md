@@ -3,16 +3,13 @@
 > ttygif converts a ttyrec file into gif files.
 > It's a stripped down version of ttyplay which calls `import` on every frame.
 
-## Installation:
-
-``` sh
-$ make
-```
-
-## Prerequisites:
+## Setup
 
 ``` sh
 $ sudo apt-get install imagemagick ttyrec
+$ git clone git@github.com:icholy/ttygif.git
+$ cd ttygif
+$ make
 ```
 
 ## Usage:
