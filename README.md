@@ -42,3 +42,7 @@ $ ./concat.sh terminal.gif
 **Example:**
 
 ![gif](http://i.imgur.com/WyFoHXZ.gif)
+
+## Credits
+
+The idea and approach was taken from [tty2gif](https://bitbucket.org/antocuni/tty2gif)
