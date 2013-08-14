@@ -5,16 +5,17 @@ prev_delay=0
 skipped=0
 
 gifs=$(find . -name '*.gif'| grep -v "$output" | sort | xargs)
-_CONVERT="convert -loop 0 "
+
+# remove -loop 0 if you don't want it to repeat
+_convert="convert -loop 0 "
 
 for gif in $gifs; do
 
     file=${gif##*/} 
     name=${file%.gif}
-    index=$(echo ${name%_*} | sed 's/0*//')
-    delay=$((${name#*_}))
-    ticks=$(echo "$delay * 0.1" | bc)
+    delay=$(echo "${name#*_} * 0.1" | bc)
 
+    # remove this is you don't want to trim zero delay frames
     if [ $delay == 0 ] && [ $prev_delay == 0 ]; then
         if [ $skipped -lt 5 ]; then
           skipped=$(($skipped + 1))
@@ -27,16 +28,12 @@ for gif in $gifs; do
 
     prev_delay=$delay
 
-    if [ -z "$index" ]; then
-      index=0
-    fi
-
-    _CONVERT="${_CONVERT} -delay $ticks $gif"
+    _convert="${_convert} -delay $delay $gif"
 done;
 
-_CONVERT="${_CONVERT} -layers Optimize $output"
+_convert="${_convert} -layers Optimize $output"
 
 echo "creating animated gif: $output"
 
-eval "$_CONVERT"
+eval "$_convert"
 
