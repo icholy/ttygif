@@ -7,7 +7,7 @@
 
 ``` sh
 $ sudo apt-get install imagemagick ttyrec
-$ git clone git@github.com:icholy/ttygif.git
+$ git clone https://github.com/icholy/ttygif.git
 $ cd ttygif
 $ make
 ```
