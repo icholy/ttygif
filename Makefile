@@ -6,8 +6,8 @@ TARGET = ttygif
 
 all: $(TARGET)
 
-ttygif: ttygif.o io.o 
-	$(CC) $(CFLAGS) -o ttygif ttygif.o io.o 
+ttygif: ttygif.o io.o util.o
+	$(CC) $(CFLAGS) -o ttygif ttygif.o io.o util.o
 	
 clean:
 	rm -f *.o $(TARGET) ttyrecord *~

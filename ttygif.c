@@ -41,10 +41,11 @@
 
 #include "ttyrec.h"
 #include "io.h"
+#include "util.h" 
 
 typedef int    (*ReadFunc)    (FILE *fp, Header *h, char **buf);
 typedef void   (*WriteFunc)   (char *buf, int len);
-typedef void   (*ProcessFunc) (FILE *fp, ReadFunc read_func);
+typedef void   (*ProcessFunc) (FILE *fp, ReadFunc read_func, char *cmd_template);
 
 struct timeval
 timeval_diff (struct timeval tv1, struct timeval tv2)
@@ -103,23 +104,32 @@ clear_screen (void) {
 }
 
 int
-take_snapshot(int index, int delay, char* window_id)
+exec_cmd(char *template, int index, int delay)
 {
-  static char cmd [256];
+    char *cmd;
+    char index_str [10];
+    char delay_str [10];
 
-  if (sprintf(cmd, "import -window %s %05d_%d.gif", window_id, index, delay) < 0) {
+    sprintf(index_str, "%d", index);
+    sprintf(delay_str, "%d", delay);
+
+    cmd = str_replace(template, "{{delay}}", delay_str);
+    if (!cmd) { return -1; }
+    
+    cmd = str_replace(cmd, "{{index}}", index_str);
+    if (!cmd) { return -1; }
+
+    if (system(cmd) != 0) {
       return -1;
-  }
+    }
 
-  if (system(cmd) != 0) {
-      return -1;
-  }
+    free(cmd);
 
-  return 0;
+    return 0;
 }
 
 void
-ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
+ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, char *cmd_template)
 {
     int index = 0;
     int delay = 0;
@@ -129,8 +139,6 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
 
     setbuf(stdout, NULL);
     setbuf(fp, NULL);
-
-    char* wid = getenv("WINDOWID");
 
     while (1) {
 
@@ -147,10 +155,10 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
             delay = ttydelay(prev, h.tv);
         }
 
-        if (take_snapshot(index, delay, wid) != 0) {
-            perror("snapshot");
-            break;
-        }
+        //if (take_snapshot(index, delay, wid) != 0) {
+        //    perror("snapshot");
+        //    break;
+        //}
 
         index++;
         prev = h.tv;
@@ -158,15 +166,15 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
     }
 }
 
-void ttyplayback (FILE *fp, ReadFunc read_func)
+void ttyplayback (FILE *fp, ReadFunc read_func, char *cmd_template)
 {
-    ttyplay(fp, ttyread, ttywrite);
+    ttyplay(fp, ttyread, ttywrite, cmd_template);
 }
 
 void
 usage (void)
 {
-    printf("Usage: ttygif [FILE]\n");
+    printf("Usage: ttygif [FILE] \"[CMD]\"\n");
     exit(EXIT_FAILURE);
 }
 
@@ -177,13 +185,15 @@ main (int argc, char **argv)
     ProcessFunc process = ttyplayback;
     FILE *input = NULL;
     struct termios old, new;
+    char* cmd_template;
 
-    if (argc < 2) {
+    if (argc < 3) {
       usage();
     }
 
     set_progname(argv[0]);
     input = efopen(argv[1], "r");
+    cmd_template = argv[2];
     
     assert(input != NULL);
 
@@ -192,7 +202,7 @@ main (int argc, char **argv)
     new.c_lflag &= ~(ICANON | ECHO | ECHONL); /* unbuffered, no echo */
     tcsetattr(0, TCSANOW, &new); /* Make it current */
 
-    process(input, read_func);
+    process(input, read_func, cmd_template);
     tcsetattr(0, TCSANOW, &old);  /* Return terminal state */
 
     return 0;
