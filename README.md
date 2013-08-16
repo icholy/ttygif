@@ -26,7 +26,7 @@ $ ttyrec myrecording
 **2. Create gif frames**
 
 ``` sh
-$ ./ttygif myrecording "import -window $WINDOWID {{index}}_{{delay}}.gif"
+$ ./ttyexec myrecording "import -window $WINDOWID {{index}}_{{delay}}.gif"
 ```
 
 * The command will be executed for each frame
@@ -38,10 +38,6 @@ $ ./concat.sh terminal.gif
 ```
 
 * Concatenates all the images in the current directory
-
-## Demo:
-
-![gif](http://i.imgur.com/kS18GFq.gif)
 
 ## Credits
 
