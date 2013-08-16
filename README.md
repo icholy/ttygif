@@ -9,6 +9,7 @@
 $ sudo apt-get install imagemagick ttyrec
 $ git clone https://github.com/icholy/ttygif.git
 $ cd ttygif
+$ git checkout ttyexec
 $ make
 ```
 
@@ -25,11 +26,10 @@ $ ttyrec myrecording
 **2. Create gif frames**
 
 ``` sh
-$ ./ttygif myrecording
+$ ./ttygif myrecording "import -window $WINDOWID {{index}}_{{delay}}.gif"
 ```
 
-* Dumps a bunch of gif images into the current directory.
-* File names have this pattern: `<zero_padded_index>_<delay_in_milliseconds>.gif`
+* The command will be executed for each frame
 
 **3. Create animated gif**
 
