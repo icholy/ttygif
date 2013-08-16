@@ -110,7 +110,7 @@ exec_cmd(char *template, int index, int delay)
     char index_str [10];
     char delay_str [10];
 
-    sprintf(index_str, "%d", index);
+    sprintf(index_str, "%05d", index);
     sprintf(delay_str, "%d", delay);
 
     cmd = str_replace(template, "{{delay}}", delay_str);
@@ -155,10 +155,10 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, char *cmd_template)
             delay = ttydelay(prev, h.tv);
         }
 
-        //if (take_snapshot(index, delay, wid) != 0) {
-        //    perror("snapshot");
-        //    break;
-        //}
+        if (exec_cmd(cmd_template, index, delay) != 0) {
+            perror("system");
+            break;
+        }
 
         index++;
         prev = h.tv;
