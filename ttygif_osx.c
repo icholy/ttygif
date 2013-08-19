@@ -109,7 +109,7 @@ clear_screen (void) {
 }
 
 int
-take_snapshot(int index, int delay, char* window_id, struct osx_config osx_options)
+take_snapshot(int index, int delay, struct osx_config osx_options)
 {
   static char cmd [256];
 
@@ -146,8 +146,6 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, struct osx_config o
     setbuf(stdout, NULL);
     setbuf(fp, NULL);
 
-    char* wid = getenv("WINDOWID");
-
     while (1) {
 
         char *buf;
@@ -163,7 +161,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, struct osx_config o
             delay = ttydelay(prev, h.tv);
         }
 
-        if (take_snapshot(index, delay, wid, osx_options) != 0) {
+        if (take_snapshot(index, delay, osx_options) != 0) {
             perror("snapshot");
             break;
         }
@@ -174,7 +172,8 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, struct osx_config o
     }
 }
 
-void ttyplayback (FILE *fp, ReadFunc read_func, struct osx_config osx_options)
+void
+ttyplayback (FILE *fp, ReadFunc read_func, struct osx_config osx_options)
 {
     ttyplay(fp, ttyread, ttywrite, osx_options);
 }
