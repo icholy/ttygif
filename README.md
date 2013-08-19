@@ -31,6 +31,13 @@ $ ./ttygif myrecording
 * Dumps a bunch of gif images into the current directory.
 * File names have this pattern: `<zero_padded_index>_<delay_in_milliseconds>.gif`
 
+On OSX optionally you can set a -f flag which will bypass cropping which is needed for terminal apps which aren't full screen. 
+Both standard Terminal and iTerm apps are supported.
+
+``` sh
+$ ./ttygif myrecording -f
+```
+
 **3. Create animated gif**
 
 ``` sh
@@ -38,6 +45,12 @@ $ ./concat.sh terminal.gif
 ```
 
 * Concatenates all the images in the current directory
+
+On OSX use concat_osx.sh since in OSX version bunch of PNGs are dumped into a folder and used as source (for better image quality).
+
+``` sh
+$ ./concat_osx.sh terminal.gif 
+```
 
 ## Demo:
 
