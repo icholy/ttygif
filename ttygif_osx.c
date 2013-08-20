@@ -113,7 +113,7 @@ take_snapshot(int index, int delay, struct osx_config osx_options)
 {
   static char cmd [256];
 
-  if (sprintf(cmd, "screencapture -l$(osascript -e 'tell app \"%s\" to id of window 1') -o -m %05d_%d.png", osx_options.terminal_app, index, delay) < 0) {
+  if (sprintf(cmd, "screencapture -l$(osascript -e 'tell app \"%s\" to id of window 1') -o -m %05d_%d.png  &> /dev/null", osx_options.terminal_app, index, delay) < 0) {
       return -1;
   }
 
