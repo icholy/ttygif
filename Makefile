@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -O2
+CFLAGS = -O2 -Wall
 VERSION = 1.0.8
 
 UNAME := $(shell uname)
