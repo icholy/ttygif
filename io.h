@@ -6,6 +6,7 @@
 int     read_header     (FILE *fp, Header *h);
 int     write_header    (FILE *fp, Header *h);
 FILE*   efopen          (const char *path, const char *mode);
+void    set_progname    (const char *name);
 int     edup            (int oldfd);
 int     edup2           (int oldfd, int newfd);
 FILE*   efdopen         (int fd, const char *mode);
