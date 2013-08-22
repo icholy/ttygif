@@ -49,65 +49,65 @@
 static int 
 is_little_endian ()
 {
-    static int retval = -1;
+  static int retval = -1;
 
-    if (retval == -1) {
-	int n = 1;
-	char *p = (char *)&n;
-	char x[] = {1, 0, 0, 0};
+  if (retval == -1) {
+    int n = 1;
+    char *p = (char *)&n;
+    char x[] = {1, 0, 0, 0};
 
-	assert(sizeof(int) == 4);
+    assert(sizeof(int) == 4);
 
-	if (memcmp(p, x, 4) == 0) {
-	    retval = 1;
-	} else {
-	    retval = 0;
-	}
+    if (memcmp(p, x, 4) == 0) {
+      retval = 1;
+    } else {
+      retval = 0;
     }
+  }
 
-    return retval;
+  return retval;
 }
 
 static int
 convert_to_little_endian (int x)
 {
-    if (is_little_endian()) {
-	return x;
-    } else {
-	return SWAP_ENDIAN(x);
-    }
+  if (is_little_endian()) {
+    return x;
+  } else {
+    return SWAP_ENDIAN(x);
+  }
 }
 
 int
 read_header (FILE *fp, Header *h)
 {
-    int buf[3];
+  int buf[3];
 
-    if (fread(buf, sizeof(int), 3, fp) == 0) {
-	return 0;
-    }
+  if (fread(buf, sizeof(int), 3, fp) == 0) {
+    return 0;
+  }
 
-    h->tv.tv_sec  = convert_to_little_endian(buf[0]);
-    h->tv.tv_usec = convert_to_little_endian(buf[1]);
-    h->len        = convert_to_little_endian(buf[2]);
+  h->tv.tv_sec  = convert_to_little_endian(buf[0]);
+  h->tv.tv_usec = convert_to_little_endian(buf[1]);
+  h->len        = convert_to_little_endian(buf[2]);
 
-    return 1;
+  return 1;
 }
 
 int
 write_header (FILE *fp, Header *h)
 {
-    int buf[3];
+  int buf[3];
 
-    buf[0] = convert_to_little_endian(h->tv.tv_sec);
-    buf[1] = convert_to_little_endian(h->tv.tv_usec);
-    buf[2] = convert_to_little_endian(h->len);
+  buf[0] = convert_to_little_endian(h->tv.tv_sec);
+  buf[1] = convert_to_little_endian(h->tv.tv_usec);
+  buf[2] = convert_to_little_endian(h->len);
 
-    if (fwrite(buf, sizeof(int), 3, fp) == 0) {
-	return 0;
-    }
+  if (fwrite(buf, sizeof(int), 3, fp) == 0) {
+    return 0;
+  }
 
-    return 1;
+  return 1;
 }
 
 static char *progname = "";
@@ -120,42 +120,43 @@ set_progname (const char *name)
 FILE *
 efopen (const char *path, const char *mode)
 {
-    FILE *fp = fopen(path, mode);
-    if (fp == NULL) {
-	fprintf(stderr, "%s: %s: %s\n", progname, path, strerror(errno));
-	exit(EXIT_FAILURE);
-    }
-    return fp;
+  FILE *fp = fopen(path, mode);
+  if (fp == NULL) {
+    fprintf(stderr, "%s: %s: %s\n", progname, path, strerror(errno));
+    exit(EXIT_FAILURE);
+  }
+  return fp;
 }
 
 int
 edup (int oldfd)
 {
-    int fd = dup(oldfd);
-    if (fd == -1) {
-	fprintf(stderr, "%s: dup failed: %s\n", progname, strerror(errno));
-	exit(EXIT_FAILURE);
-    }
-    return fd;
+  int fd = dup(oldfd);
+  if (fd == -1) {
+    fprintf(stderr, "%s: dup failed: %s\n", progname, strerror(errno));
+    exit(EXIT_FAILURE);
+  }
+  return fd;
 }
 
 int
 edup2 (int oldfd, int newfd)
 {
-    int fd = dup2(oldfd, newfd);
-    if (fd == -1) {
-	fprintf(stderr, "%s: dup2 failed: %s\n", progname, strerror(errno));
-	exit(EXIT_FAILURE);
-    }
-    return fd;
+  int fd = dup2(oldfd, newfd);
+  if (fd == -1) {
+    fprintf(stderr, "%s: dup2 failed: %s\n", progname, strerror(errno));
+    exit(EXIT_FAILURE);
+  }
+  return fd;
 }
 
 FILE *
 efdopen (int fd, const char *mode)
 {
-    FILE *fp = fdopen(fd, mode);
-    if (fp == NULL) {
-	fprintf(stderr, "%s: fdopen failed: %s\n", progname, strerror(errno));
-	exit(EXIT_FAILURE);
-    }
+  FILE *fp = fdopen(fd, mode);
+  if (fp == NULL) {
+    fprintf(stderr, "%s: fdopen failed: %s\n", progname, strerror(errno));
+    exit(EXIT_FAILURE);
+  }
+  return fp;
 }
