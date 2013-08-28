@@ -52,14 +52,6 @@ On OSX use concat_osx.sh since in OSX version bunch of PNGs are dumped into a fo
 $ ./concat_osx.sh terminal.gif 
 ```
 
-**Note:**
-
-Make sure to clean up any existing `*.gif` files in the directory before starting.
-
-``` sh
-$ rm *.gif
-```
-
 ## Demo:
 
 ![gif](http://i.imgur.com/kS18GFq.gif)
