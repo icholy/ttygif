@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# avoid deleting file, if convert will fail
+set -e
+
 output=${1-"output.gif"}
 prev_delay=0
 skipped=0
