@@ -37,7 +37,7 @@ echo "creating animated gif: $output"
 
 eval "$_convert"
 
-echo "deleting temporary gifs"
+echo "deleting temporary pngs"
 
 rm $pngs
 
