@@ -39,5 +39,5 @@ eval "$_convert"
 
 echo "deleting temporary gifs"
 
-rm $gifs
+rm $pngs
 
