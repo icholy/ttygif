@@ -59,3 +59,7 @@ $ ./concat_osx.sh terminal.gif
 ## Credits
 
 The idea and approach was adapted from [tty2gif](https://bitbucket.org/antocuni/tty2gif)
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/icholy/ttygif/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
