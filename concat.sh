@@ -7,7 +7,7 @@ output=${1-"output.gif"}
 prev_delay=0
 skipped=0
 
-gifs=$(find . -name '*.gif'| grep -v "$output" | sort | xargs)
+gifs=$(find . -maxdepth 1 -name '*.gif'| grep -v "$output" | sort | xargs)
 
 # remove -loop 0 if you don't want it to repeat
 _convert="convert -loop 0 "
