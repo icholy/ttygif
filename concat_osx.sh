@@ -4,7 +4,7 @@ output=${1-"output.gif"}
 prev_delay=0
 skipped=0
 
-pngs=$(find . -name '*.png'| grep -v "$output" | sort | xargs)
+pngs=$(find . -maxdepth 1 -name '*.png'| grep -v "$output" | sort | xargs)
 
 # remove -loop 0 if you don't want it to repeat
 _convert="convert -loop 0 "
