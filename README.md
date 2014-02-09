@@ -7,7 +7,7 @@
 
 ### Debian/Ubuntu
 ``` sh
-$ sudo apt-get install imagemagick ttyrec
+$ sudo apt-get install imagemagick ttyrec gcc
 $ git clone https://github.com/icholy/ttygif.git
 $ cd ttygif
 $ make
