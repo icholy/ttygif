@@ -5,8 +5,17 @@
 
 ## Setup
 
+### Debian/Ubuntu
 ``` sh
 $ sudo apt-get install imagemagick ttyrec
+$ git clone https://github.com/icholy/ttygif.git
+$ cd ttygif
+$ make
+```
+
+### OSX
+``` sh
+$ brew install imagemagick
 $ git clone https://github.com/icholy/ttygif.git
 $ cd ttygif
 $ make
