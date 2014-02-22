@@ -15,7 +15,7 @@ _convert="convert -loop 0"
 
 for img in $imgs; do
 
-    file=${png##*/} 
+    file=${img##*/} 
     name=${file%.*}
     delay=$(echo "${name#*_} * 0.1" | bc)
 
@@ -29,8 +29,6 @@ for img in $imgs; do
 done;
 
 _convert="$_convert -delay 500 $prev_img -layers Optimize $output"
-
-echo "$_convert"
 
 echo "creating animated gif: $output"
 
