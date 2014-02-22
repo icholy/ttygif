@@ -5,42 +5,38 @@ set -e
 
 output=${1-"output.gif"}
 prev_delay=0
+prev_img=""
 skipped=0
 
-gifs=$(find . -maxdepth 1 -name '*.gif'| grep -v "$output" | sort | xargs)
+imgs=$(find . -maxdepth 1 -regex ".*/[0-9]\{5\}.*[png|gif]" | grep -v "$output" | sort | xargs)
 
 # remove -loop 0 if you don't want it to repeat
-_convert="convert -loop 0 "
+_convert="convert -loop 0"
 
-for gif in $gifs; do
+for img in $imgs; do
 
-    file=${gif##*/} 
-    name=${file%.gif}
+    file=${png##*/} 
+    name=${file%.*}
     delay=$(echo "${name#*_} * 0.1" | bc)
 
-    # remove this is you don't want to trim zero delay frames
-    if [ $delay == 0 ] && [ $prev_delay == 0 ]; then
-        if [ $skipped -lt 5 ]; then
-          skipped=$(($skipped + 1))
-          prev_delay=$delay
-          continue
-        else
-          skipped=0
-        fi
+    if [ $delay != 0 ] || [ $prev_delay != 0 ]; then
+      _convert="$_convert -delay $delay $prev_img"
     fi
 
     prev_delay=$delay
 
-    _convert="$_convert -delay $delay $gif"
+    prev_img=$img
 done;
 
-_convert="$_convert -layers Optimize $output"
+_convert="$_convert -delay 500 $prev_img -layers Optimize $output"
+
+echo "$_convert"
 
 echo "creating animated gif: $output"
 
 eval "$_convert"
 
-echo "deleting temporary gifs"
+echo "deleting temporary imgs"
 
-rm $gifs
+rm $imgs
 
