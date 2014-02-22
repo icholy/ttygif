@@ -6,6 +6,7 @@ set -e
 output=${1-"output.gif"}
 prev_delay=0
 prev_img=""
+prev_ext=""
 skipped=0
 
 imgs=$(find . -maxdepth 1 -regex ".*/[0-9]\{5\}.*[png|gif]" | grep -v "$output" | sort | xargs)
@@ -14,6 +15,13 @@ imgs=$(find . -maxdepth 1 -regex ".*/[0-9]\{5\}.*[png|gif]" | grep -v "$output" 
 _convert="convert -loop 0"
 
 for img in $imgs; do
+
+    ext=${img##*.}
+    if [[ "$prev_ext" != "$ext" ]] && [[ ! -z "$prev_ext" ]]; then
+      echo "ERROR: all images should be either gifs or pngs"
+      exit 1
+    fi
+    prev_ext=$ext
 
     file=${img##*/} 
     name=${file%.*}
