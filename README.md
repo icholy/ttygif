@@ -69,3 +69,5 @@ $ ./concat_osx.sh terminal.gif
 
 The idea and approach was adapted from [tty2gif](https://bitbucket.org/antocuni/tty2gif)
 
+![](http://i.imgur.com/9et8daN.jpg)
+
