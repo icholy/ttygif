@@ -13,6 +13,15 @@ $ cd ttygif
 $ make
 ```
 
+### Fedora/Redhat
+``` sh
+$ sudo yum install ImageMagick gcc
+$ # install ttyrec from source ~> https://github.com/mjording/ttyrec
+$ git clone https://github.com/icholy/ttygif.git
+$ cd ttygif
+$ make
+```
+
 ### OSX
 ``` sh
 $ brew install imagemagick ttyrec
