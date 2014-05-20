@@ -132,6 +132,11 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
 
     char* wid = getenv("WINDOWID");
 
+    if (wid == NULL || !strlen(wid)) {
+        printf("Error: WINDOWID environment variable was empty.");
+        exit(EXIT_FAILURE);
+    }
+
     while (1) {
 
         char *buf;
