@@ -122,7 +122,7 @@ take_snapshot(int index, int delay, struct osx_config osx_options)
   }
 
   if (osx_options.fullscreen == 0) {
-    if (sprintf(cmd, "convert %05d_%d.png -background white -flatten +matte -crop +0+22 -crop +4+0 -crop -4-0 +repage %05d_%d.png", index, delay, index, delay) < 0) {
+    if (sprintf(cmd, "convert %05d_%d.png -background white -quiet -flatten +matte -crop +0+22 -crop +4+0 -crop -4-0 +repage %05d_%d.png", index, delay, index, delay) < 0) {
         return -1;
     }
   }
