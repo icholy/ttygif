@@ -25,9 +25,7 @@ $ make
 ### OSX
 ``` sh
 $ brew install imagemagick ttyrec
-$ git clone https://github.com/icholy/ttygif.git
-$ cd ttygif
-$ make
+$ brew install https://github.com/icholy/ttygif/blob/master/ttygif.rb
 ```
 
 ## Usage:
