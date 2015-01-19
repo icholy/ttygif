@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 output=${1-"output.gif"}
 prev_delay=0

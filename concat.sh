@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # avoid deleting file, if convert will fail
 set -e
