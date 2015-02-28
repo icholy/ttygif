@@ -107,6 +107,8 @@ take_snapshot(int index, int delay, char* window_id)
 {
   static char cmd [256];
 
+  // ensure text has been written before taking screenshot
+  usleep(50000);
   if (sprintf(cmd, "import -window %s %05d_%d.gif", window_id, index, delay) < 0) {
       return -1;
   }

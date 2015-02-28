@@ -2,6 +2,7 @@
 
 output=${1-"output.gif"}
 prev_delay=0
+prev_png=""
 skipped=0
 
 pngs=$(find . -maxdepth 1 -name '*.png'| grep -v "$output" | sort | xargs)
@@ -28,8 +29,12 @@ for png in $pngs; do
 
     prev_delay=$delay
 
-    _convert="$_convert -delay $delay $png"
+    if [ -n "$prev_png" ]; then
+        _convert="$_convert -delay $delay $prev_png"
+    fi
+    prev_png=$png
 done;
+_convert="$_convert $png"
 
 _convert="$_convert -layers Optimize $output"
 
