@@ -109,7 +109,7 @@ take_snapshot(int index, int delay, char* window_id)
 
   // ensure text has been written before taking screenshot
   usleep(50000);
-  if (sprintf(cmd, "import -window %s %05d_%d.gif", window_id, index, delay) < 0) {
+  if (sprintf(cmd, "xwd -id %s -out %05d_%d.xwd", window_id, index, delay) < 0) {
       return -1;
   }
 
