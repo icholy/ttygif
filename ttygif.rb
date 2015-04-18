@@ -11,5 +11,6 @@ class Ttygif < Formula
   def install
     system 'make'
     bin.install('ttygif')
+    bin.install('concat_osx.sh')
   end
 end
