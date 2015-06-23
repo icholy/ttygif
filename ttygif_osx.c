@@ -146,6 +146,10 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, struct osx_config o
     setbuf(stdout, NULL);
     setbuf(fp, NULL);
 
+    int skip_limit = 10;
+    int skip_current = 0;
+    int skip_delay = 0;
+
     while (1) {
 
         char *buf;
@@ -160,10 +164,16 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, struct osx_config o
         if (index != 0) {
             delay = ttydelay(prev, h.tv);
         }
-
-        if (take_snapshot(index, delay, osx_options) != 0) {
-            perror("snapshot");
-            break;
+        if (delay < 3 && skip_current < skip_limit) {
+            skip_current++;
+            skip_delay += delay;
+        } else {
+          if (take_snapshot(index, delay + skip_delay, osx_options) != 0) {
+              perror("snapshot");
+              break;
+          }
+          skip_current = 0;
+          skip_delay = 0;
         }
 
         index++;
