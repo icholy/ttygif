@@ -20,7 +20,7 @@ for xwd in $xwds; do
     delay=$(echo "${name#*_} * 0.1" | bc)
 
     # remove this is you don't want to trim zero delay frames
-    if [ -n "$prev_png" ] && [ $delay == 0 ] && [ $prev_delay == 0 ]; then
+    if [ -n "$prev_xwd" ] && [ $delay == 0 ] && [ $prev_delay == 0 ]; then
         if [ $skipped -lt 5 ]; then
           skipped=$(($skipped + 1))
           prev_delay=$delay
