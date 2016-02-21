@@ -5,22 +5,29 @@ set -e
 
 output=${1-"output.gif"}
 prev_delay=0
-prev_xwd=""
+prev_img=""
 skipped=0
 
-xwds=$(find . -maxdepth 1 -name '*.xwd'| grep -v "$output" | sort | xargs)
+uname=`uname -s`
+if [ "$uname" == 'Darwin' ]; then
+	format="png"
+else
+	format="xwd"
+fi
+
+imgs=$(find . -maxdepth 1 -name "*.$format"| grep -v "$output" | sort | xargs)
 
 # remove -loop 0 if you don't want it to repeat
 _convert="convert -loop 0 "
 
-for xwd in $xwds; do
+for img in $imgs; do
 
-    file=${xwd##*/} 
-    name=${file%.xwd}
+    file=${img##*/} 
+    name=${file%.$format}
     delay=$(echo "${name#*_} * 0.1" | bc)
 
     # remove this is you don't want to trim zero delay frames
-    if [ -n "$prev_xwd" ] && [ $delay == 0 ] && [ $prev_delay == 0 ]; then
+    if [ -n "$prev_img" ] && [ $delay == 0 ] && [ $prev_delay == 0 ]; then
         if [ $skipped -lt 5 ]; then
           skipped=$(($skipped + 1))
           prev_delay=$delay
@@ -32,12 +39,12 @@ for xwd in $xwds; do
 
     prev_delay=$delay
 
-    if [ -n "$prev_xwd" ]; then
-        _convert="$_convert -delay $delay $prev_xwd"
+    if [ -n "$prev_img" ]; then
+        _convert="$_convert -delay $delay $prev_img"
     fi
-    prev_xwd=$xwd
+    prev_img=$img
 done;
-_convert="$_convert $xwd"
+_convert="$_convert $img"
 
 _convert="$_convert -layers Optimize $output"
 
@@ -47,5 +54,5 @@ eval "$_convert"
 
 echo "deleting temporary gifs"
 
-rm $xwds
+rm $imgs
 
