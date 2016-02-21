@@ -62,12 +62,6 @@ $ ./concat.sh terminal.gif
 
 * Concatenates all the images in the current directory
 
-On OSX use concat_osx.sh since in OSX version bunch of PNGs are dumped into a folder and used as source (for better image quality).
-
-``` sh
-$ ./concat_osx.sh terminal.gif 
-```
-
 ## Demo:
 
 ![gif](http://i.imgur.com/kS18GFq.gif)
