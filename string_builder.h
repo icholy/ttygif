@@ -1,3 +1,5 @@
+#ifndef STRING_BUILDER_H
+#define STRING_BUILDER_H
 
 typedef struct {
   size_t size;
@@ -12,4 +14,6 @@ void StringBuilder_free(StringBuilder *sb);
 char * StringBuilder_str(StringBuilder *sb);
 void StringBuilder_write_char(StringBuilder *sb, char c);
 void StringBuilder_write(StringBuilder *sb, const char *s);
+
+#endif /* STRING_BUILDER_H */
 
