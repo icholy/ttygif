@@ -12,5 +12,8 @@ all: ttygif
 ttygif: ttygif.o io.o string_builder.o
 	$(CC) $(CFLAGS) -o ttygif ttygif.o io.o string_builder.o
 
+install: ttygif
+	cp ttygif /usr/local/bin/ttygif
+
 clean:
 	rm -f *.o ttygif ttyrecord *~
