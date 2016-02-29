@@ -38,29 +38,18 @@ $ ttyrec myrecording
 
 * Hit CTRL-D or type `exit` when done recording.
 
-**2. Create gif frames**
+**2. Convert to gif**
 
 ``` sh
-$ ./ttygif myrecording
+$ ttygif myrecording
 ```
-
-* Dumps a bunch of gif images into the current directory.
-* File names have this pattern: `<zero_padded_index>_<delay_in_milliseconds>.gif`
 
 On OSX optionally you can set a -f flag which will bypass cropping which is needed for terminal apps which aren't full screen. 
 Both standard Terminal and iTerm apps are supported.
 
 ``` sh
-$ ./ttygif myrecording -f
+$ ttygif myrecording -f
 ```
-
-**3. Create animated gif**
-
-``` sh
-$ ./concat.sh terminal.gif 
-```
-
-* Concatenates all the images in the current directory
 
 ## Demo:
 
