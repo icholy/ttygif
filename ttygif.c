@@ -256,7 +256,9 @@ void
 usage (void)
 {
     printf("Usage: ttygif [FILE] [-f]\n");
-    printf("  -f : include window border (OSX)\n");
+#ifdef OS_OSX
+    printf("  -f : include window border\n");
+#endif
     exit(EXIT_FAILURE);
 }
 
