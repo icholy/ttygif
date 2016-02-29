@@ -38,13 +38,14 @@
 #include <termios.h>
 #include <sys/time.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "ttyrec.h"
 #include "io.h"
 #include "string_builder.h"
 
 typedef struct {
-  int fullscreen;
+  bool fullscreen;
   int skip_limit;
   int skip_threshold;
   const char *terminal_app;
@@ -129,7 +130,7 @@ take_snapshot_osx(const char *img_path, Options o)
       return -1;
   }
 
-  if (o.fullscreen == 0) {
+  if (!o.fullscreen) {
     if (sprintf(cmd, 
           "convert %s -background white -quiet -flatten +matte -crop +0+22 -crop +4+0 -crop -4-0 +repage %s &> /dev/null",
           img_path, img_path) < 0) {
@@ -189,9 +190,9 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
     StringBuilder_write(sb, "convert -loop 0 ");
 
     int nskipped = 0;
-    int skip = 0;
+    int skip = false;
 
-    while (1) {
+    while (true) {
 
         char *buf;
         Header h;
@@ -209,15 +210,15 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
         }
 
         if (delay <= o.skip_threshold) {
-          skip = 1;
+          skip = true;
           nskipped++;
         } else {
-          skip = 0;
+          skip = false;
         }
 
         if (skip && nskipped > o.skip_limit) {
           nskipped = 0;
-          skip = 0;
+          skip = false;
         }
 
         if (!skip && index != 0) {
@@ -277,7 +278,7 @@ main (int argc, char **argv)
     struct termios old, new;
 
     Options options;
-    options.fullscreen = 0;
+    options.fullscreen = false;
     options.skip_limit = 5;
     options.skip_threshold = 0;
     options.window_id = getenv("WINDOWID");
@@ -311,7 +312,7 @@ main (int argc, char **argv)
 
     if (argc >= 3) {
       if (strstr(argv[2], "-f")) {
-        options.fullscreen = 1;
+        options.fullscreen = true;
       }
     }
 
