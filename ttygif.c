@@ -119,7 +119,9 @@ take_snapshot_osx(const char *fname, Options o)
 {
   static char cmd [256];
 
-  if (sprintf(cmd, "screencapture -l$(osascript -e 'tell app \"%s\" to id of window 1') -o -m %s &> /dev/null", o.terminal_app, fname) < 0) {
+  if (sprintf(cmd, 
+        "screencapture -l$(osascript -e 'tell app \"%s\" to id of window 1') -o -m %s &> /dev/null",
+        o.terminal_app, fname) < 0) {
       return -1;
   }
 
