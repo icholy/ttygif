@@ -239,10 +239,11 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
 
     StringBuilder_write(sb, " -layers Optimize tty.gif");
 
-    printf("Creating Animated GIF\n");
+    printf("Creating Animated GIF ... this can take a while\n");
     if (system(sb->s) != 0) {
       perror("convert failed");
     }
+    printf("Created: tty.gif in the current directory!");
 
     StringBuilder_free(sb);
 }
