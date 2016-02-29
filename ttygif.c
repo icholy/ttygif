@@ -244,7 +244,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
     if (system(sb->s) != 0) {
       perror("convert failed");
     }
-    printf("Created: tty.gif in the current directory!");
+    printf("Created: tty.gif in the current directory!\n");
 
     StringBuilder_free(sb);
 }
