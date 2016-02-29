@@ -53,8 +53,8 @@ void StringBuilder_write_char(StringBuilder *sb, char c)
   if (size >= sb->cap) {
     StringBuilder_resize(sb, sb->cap * 2);
   }
-  sb->s[size + 0] = c;
-  sb->s[size + 1] = '\0';
+  sb->s[size - 1] = c;
+  sb->s[size - 0] = '\0';
   sb->size++;
 }
 
