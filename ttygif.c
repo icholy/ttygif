@@ -12,8 +12,8 @@
  *    documentation and/or other materials provided with the distribution.
  * 3. All advertising materials mentioning features or use of this software
  *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
+ *  This product includes software developed by the University of
+ *  California, Berkeley and its contributors.
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
@@ -41,6 +41,7 @@
 
 #include "ttyrec.h"
 #include "io.h"
+#include "string_builder.h"
 
 typedef int    (*ReadFunc)    (FILE *fp, Header *h, char **buf);
 typedef void   (*WriteFunc)   (char *buf, int len);
@@ -83,7 +84,7 @@ ttyread (FILE *fp, Header *h, char **buf)
     if (*buf == NULL) {
         perror("malloc");
     }
-	
+  
     if (fread(*buf, 1, h->len, fp) == 0) {
         perror("fread");
     }
@@ -103,13 +104,13 @@ clear_screen (void) {
 }
 
 int
-take_snapshot(int index, int delay, char* window_id)
+take_snapshot(const char *fname, char* window_id, StringBuilder *command)
 {
   static char cmd [256];
 
   // ensure text has been written before taking screenshot
   usleep(50000);
-  if (sprintf(cmd, "xwd -id %s -out %05d_%d.xwd", window_id, index, delay) < 0) {
+  if (sprintf(cmd, "xwd -id %s -out %s", window_id, fname) < 0) {
       return -1;
   }
 
@@ -139,10 +140,18 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
         exit(EXIT_FAILURE);
     }
 
+    StringBuilder *sb = StringBuilder_new();
+    StringBuilder_write(sb, "convert -loop 0 ");
+
+    int nskipped = 0;
+    int skip = 0;
+
     while (1) {
 
         char *buf;
         Header h;
+        static char fname[256];
+        static char arg_buffer[256];
 
         if (read_func(fp, &h, &buf) == 0) {
             break;
@@ -154,7 +163,30 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
             delay = ttydelay(prev, h.tv);
         }
 
-        if (take_snapshot(index, delay, wid) != 0) {
+        if (delay == 0) {
+          skip = 1;
+          nskipped++;
+        } else {
+          skip = 0;
+        }
+
+        if (skip && nskipped > 5) {
+          nskipped = 0;
+          skip = 0;
+        }
+
+        if (!skip && index != 0) {
+          if (sprintf(arg_buffer, " -delay %f %s", delay * 0.1, fname) < 0) {
+              perror("command error");
+              break;
+          }
+          StringBuilder_write(sb, arg_buffer);
+        }
+        if (sprintf(fname, "%05d.xwd", index) < 0) {
+            perror("filename error");
+            break;
+        }
+        if (take_snapshot(fname, wid, sb) != 0) {
             perror("snapshot");
             break;
         }
@@ -163,6 +195,15 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
         prev = h.tv;
         free(buf);
     }
+
+    StringBuilder_write(sb, " -layers Optimize tty.gif");
+
+    printf("Creating Animated GIF\n");
+    if (system(sb->s) != 0) {
+      perror("convert failed");
+    }
+
+    StringBuilder_free(sb);
 }
 
 void ttyplayback (FILE *fp, ReadFunc read_func)
