@@ -46,6 +46,7 @@
 typedef struct {
   int fullscreen;
   int skip_limit;
+  int skip_threshold;
   const char *terminal_app;
   const char *window_id;
   const char *img_ext;
@@ -204,7 +205,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
             delay = ttydelay(prev, h.tv);
         }
 
-        if (delay == 0) {
+        if (delay <= o.skip_threshold) {
           skip = 1;
           nskipped++;
         } else {
@@ -274,6 +275,7 @@ main (int argc, char **argv)
     Options options;
     options.fullscreen = 0;
     options.skip_limit = 5;
+    options.skip_threshold = 0;
     options.window_id = getenv("WINDOWID");
     options.terminal_app = getenv("TERM_PROGRAM");
 
