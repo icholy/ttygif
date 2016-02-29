@@ -11,8 +11,8 @@ endif
 
 all: $(TARGET)
 
-ttygif: ttygif.o io.o 
-	$(CC) $(CFLAGS) -o ttygif ttygif.o io.o 
+ttygif: ttygif.o io.o string_builder.o
+	$(CC) $(CFLAGS) -o ttygif ttygif.o io.o string_builder.o
 
 osx: ttygif_osx.o io.o
 	$(CC) $(CFLAGS) -o ttygif ttygif_osx.o io.o
