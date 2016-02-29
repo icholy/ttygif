@@ -115,13 +115,13 @@ clear_screen (void) {
 }
 
 int
-take_snapshot_osx(const char *fname, Options o)
+take_snapshot_osx(const char *img_path, Options o)
 {
   static char cmd [256];
 
   if (sprintf(cmd, 
         "screencapture -l$(osascript -e 'tell app \"%s\" to id of window 1') -o -m %s &> /dev/null",
-        o.terminal_app, fname) < 0) {
+        o.terminal_app, img_path) < 0) {
       return -1;
   }
 
@@ -132,7 +132,7 @@ take_snapshot_osx(const char *fname, Options o)
   if (o.fullscreen == 0) {
     if (sprintf(cmd, 
           "convert %s -background white -quiet -flatten +matte -crop +0+22 -crop +4+0 -crop -4-0 +repage %s &> /dev/null",
-          fname, fname) < 0) {
+          img_path, img_path) < 0) {
         return -1;
     }
   }
@@ -145,14 +145,14 @@ take_snapshot_osx(const char *fname, Options o)
 }
 
 int
-take_snapshot_linux(const char *fname, Options o)
+take_snapshot_linux(const char *img_path, Options o)
 {
   static char cmd [256];
 
   // ensure text has been written before taking screenshot
   usleep(50000);
 
-  if (sprintf(cmd, "xwd -id %s -out %s", o.window_id, fname) < 0) {
+  if (sprintf(cmd, "xwd -id %s -out %s", o.window_id, img_path) < 0) {
       return -1;
   }
 
@@ -164,12 +164,12 @@ take_snapshot_linux(const char *fname, Options o)
 }
 
 int
-take_snapshot(const char *fname, Options o)
+take_snapshot(const char *img_path, Options o)
 {
 #ifdef OS_OSX
-  return take_snapshot_osx(fname, o);
+  return take_snapshot_osx(img_path, o);
 #else 
-  return take_snapshot_linux(fname, o);
+  return take_snapshot_linux(img_path, o);
 #endif
 }
 
@@ -195,7 +195,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
 
         char *buf;
         Header h;
-        static char fname[256];
+        static char img_path[256];
         static char arg_buffer[256];
 
         if (read_func(fp, &h, &buf) == 0) {
@@ -221,17 +221,17 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
         }
 
         if (!skip && index != 0) {
-          if (sprintf(arg_buffer, " -delay %f %s", delay * 0.1, fname) < 0) {
+          if (sprintf(arg_buffer, " -delay %f %s", delay * 0.1, img_path) < 0) {
               perror("command error");
               break;
           }
           StringBuilder_write(sb, arg_buffer);
         }
-        if (sprintf(fname, "%s/%d.%s", o.img_dir, index, o.img_ext) < 0) {
+        if (sprintf(img_path, "%s/%d.%s", o.img_dir, index, o.img_ext) < 0) {
             perror("filename error");
             break;
         }
-        if (take_snapshot(fname, o) != 0) {
+        if (take_snapshot(img_path, o) != 0) {
             perror("snapshot");
             break;
         }
