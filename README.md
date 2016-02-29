@@ -1,7 +1,7 @@
 # TTYGIF
 
 > ttygif converts a ttyrec file into gif files.
-> It's a stripped down version of ttyplay which calls `xwd` on every frame.
+> It's a stripped down version of ttyplay that captures every frame.
 
 ## Setup
 
