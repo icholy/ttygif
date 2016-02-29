@@ -11,6 +11,7 @@ $ sudo apt-get install imagemagick ttyrec gcc
 $ git clone https://github.com/icholy/ttygif.git
 $ cd ttygif
 $ make
+$ sudo make install
 ```
 
 ### Fedora/Redhat
@@ -20,6 +21,7 @@ $ # install ttyrec from source ~> https://github.com/mjording/ttyrec
 $ git clone https://github.com/icholy/ttygif.git
 $ cd ttygif
 $ make
+$ sudo make install
 ```
 
 ### OSX
