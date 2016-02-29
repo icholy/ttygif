@@ -94,11 +94,11 @@ ttyread (FILE *fp, Header *h, char **buf)
 
     *buf = malloc(h->len);
     if (*buf == NULL) {
-        perror("malloc");
+        perror("Error: Out of memory (malloc)");
     }
   
     if (fread(*buf, 1, h->len, fp) == 0) {
-        perror("fread");
+        perror("Error: Failed to read (fread)");
     }
     return 1;
 }
@@ -223,17 +223,17 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
 
         if (!skip && index != 0) {
           if (sprintf(arg_buffer, " -delay %f %s", delay * 0.1, img_path) < 0) {
-              perror("command error");
+              perror("Error: Failed to format 'convert' parameters");
               break;
           }
           StringBuilder_write(sb, arg_buffer);
         }
         if (sprintf(img_path, "%s/%d.%s", o.img_dir, index, o.img_ext) < 0) {
-            perror("filename error");
+            perror("Error: Failed to format filename");
             break;
         }
         if (take_snapshot(img_path, o) != 0) {
-            perror("snapshot");
+            perror("Error: Failed to take snapshot");
             break;
         }
 
@@ -247,7 +247,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
 
     printf("Creating Animated GIF ... this can take a while\n");
     if (system(sb->s) != 0) {
-      perror("convert failed");
+      perror("Error: Failed to execute 'convert' command");
     }
     printf("Created: %s in the current directory!\n", o.out_file);
 
@@ -288,7 +288,7 @@ main (int argc, char **argv)
     char dir_template[] = "/tmp/ttygif.XXXXXX";
     options.img_dir = mkdtemp(dir_template);
     if (options.img_dir == NULL) {
-      perror("ERROR: Failed to create tmp directory.");
+      perror("Error: Failed to create tmp directory.");
       exit(EXIT_FAILURE);
     }
 
