@@ -53,7 +53,7 @@ $ ttygif myrecording -f
 
 ## Demo:
 
-![gif](http://i.imgur.com/kS18GFq.gif)
+![gif](http://i.imgur.com/nvEHTgn.gif)
 
 ## Credits
 
