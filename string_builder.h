@@ -11,5 +11,5 @@ StringBuilder * StringBuilder_new(void);
 void StringBuilder_free(StringBuilder *sb);
 char * StringBuilder_str(StringBuilder *sb);
 void StringBuilder_write_char(StringBuilder *sb, char c);
-void StringBuilder_write(StringBuilder *sb, char *s);
+void StringBuilder_write(StringBuilder *sb, const char *s);
 

@@ -51,6 +51,7 @@ typedef struct {
   const char *window_id;
   const char *img_ext;
   const char *img_dir;
+  const char *out_file;
 } Options;
 
 typedef int    (*ReadFunc)    (FILE *fp, Header *h, char **buf);
@@ -238,7 +239,8 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
         free(buf);
     }
 
-    StringBuilder_write(sb, " -layers Optimize tty.gif");
+    StringBuilder_write(sb, " -layers Optimize ");
+    StringBuilder_write(sb, o.out_file);
 
     printf("Creating Animated GIF ... this can take a while\n");
     if (system(sb->s) != 0) {
@@ -278,6 +280,7 @@ main (int argc, char **argv)
     options.skip_threshold = 0;
     options.window_id = getenv("WINDOWID");
     options.terminal_app = getenv("TERM_PROGRAM");
+    options.out_file = "tty.gif";
 
     char dir_template[] = "/tmp/ttygif.XXXXXX";
     options.img_dir = mkdtemp(dir_template);

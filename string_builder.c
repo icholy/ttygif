@@ -58,7 +58,7 @@ void StringBuilder_write_char(StringBuilder *sb, char c)
   sb->size++;
 }
 
-void StringBuilder_write(StringBuilder *sb, char *s)
+void StringBuilder_write(StringBuilder *sb, const char *s)
 {
   for (int i = 0; s[i] != '\0'; i++) {
     StringBuilder_write_char(sb, s[i]);
