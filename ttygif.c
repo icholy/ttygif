@@ -43,9 +43,18 @@
 #include "io.h"
 #include "string_builder.h"
 
+typedef struct {
+  int fullscreen;
+  int skip_limit;
+  const char *terminal_app;
+  const char *window_id;
+  const char *img_ext;
+  const char *img_dir;
+} Options;
+
 typedef int    (*ReadFunc)    (FILE *fp, Header *h, char **buf);
 typedef void   (*WriteFunc)   (char *buf, int len);
-typedef void   (*ProcessFunc) (FILE *fp, ReadFunc read_func);
+typedef void   (*ProcessFunc) (FILE *fp, ReadFunc read_func, Options o);
 
 struct timeval
 timeval_diff (struct timeval tv1, struct timeval tv2)
@@ -104,13 +113,42 @@ clear_screen (void) {
 }
 
 int
-take_snapshot(const char *fname, char* window_id, StringBuilder *command)
+take_snapshot_osx(const char *fname, Options o)
+{
+  static char cmd [256];
+
+  if (sprintf(cmd, "screencapture -l$(osascript -e 'tell app \"%s\" to id of window 1') -o -m %s &> /dev/null", o.terminal_app, fname) < 0) {
+      return -1;
+  }
+
+  if (system(cmd) != 0) {
+      return -1;
+  }
+
+  if (o.fullscreen == 0) {
+    if (sprintf(cmd, 
+          "convert %s -background white -quiet -flatten +matte -crop +0+22 -crop +4+0 -crop -4-0 +repage %s &> /dev/null",
+          fname, fname) < 0) {
+        return -1;
+    }
+  }
+
+  if (system(cmd) != 0) {
+      return -1;
+  }
+
+  return 0;
+}
+
+int
+take_snapshot_linux(const char *fname, Options o)
 {
   static char cmd [256];
 
   // ensure text has been written before taking screenshot
   usleep(50000);
-  if (sprintf(cmd, "xwd -id %s -out %s", window_id, fname) < 0) {
+
+  if (sprintf(cmd, "xwd -id %s -out %s", o.window_id, fname) < 0) {
       return -1;
   }
 
@@ -121,8 +159,18 @@ take_snapshot(const char *fname, char* window_id, StringBuilder *command)
   return 0;
 }
 
+int
+take_snapshot(const char *fname, Options o)
+{
+#ifdef OS_OSX
+  return take_snapshot_osx(fname, o);
+#else 
+  return take_snapshot_linux(fname, o);
+#endif
+}
+
 void
-ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
+ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
 {
     int index = 0;
     int delay = 0;
@@ -133,25 +181,11 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
     setbuf(stdout, NULL);
     setbuf(fp, NULL);
 
-    char* wid = getenv("WINDOWID");
-
-    if (wid == NULL || !strlen(wid)) {
-        printf("Error: WINDOWID environment variable was empty.");
-        exit(EXIT_FAILURE);
-    }
-
     StringBuilder *sb = StringBuilder_new();
     StringBuilder_write(sb, "convert -loop 0 ");
 
     int nskipped = 0;
     int skip = 0;
-
-    char dir_template[] = "/tmp/tmpgif.XXXXXX";
-    char *dir_name = mkdtemp(dir_template);
-    if (dir_name == NULL) {
-      perror("Failed to create tmp directory");
-      exit(EXIT_FAILURE);
-    }
 
     while (1) {
 
@@ -177,7 +211,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
           skip = 0;
         }
 
-        if (skip && nskipped > 5) {
+        if (skip && nskipped > o.skip_limit) {
           nskipped = 0;
           skip = 0;
         }
@@ -189,11 +223,11 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
           }
           StringBuilder_write(sb, arg_buffer);
         }
-        if (sprintf(fname, "%s/%d.xwd", dir_name, index) < 0) {
+        if (sprintf(fname, "%s/%d.%s", o.img_dir, index, o.img_ext) < 0) {
             perror("filename error");
             break;
         }
-        if (take_snapshot(fname, wid, sb) != 0) {
+        if (take_snapshot(fname, o) != 0) {
             perror("snapshot");
             break;
         }
@@ -213,15 +247,16 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
     StringBuilder_free(sb);
 }
 
-void ttyplayback (FILE *fp, ReadFunc read_func)
+void ttyplayback (FILE *fp, ReadFunc read_func, Options o)
 {
-    ttyplay(fp, ttyread, ttywrite);
+    ttyplay(fp, ttyread, ttywrite, o);
 }
 
 void
 usage (void)
 {
-    printf("Usage: ttygif [FILE]\n");
+    printf("Usage: ttygif [FILE] [-f]\n");
+    printf("  -f : include window border (OSX)\n");
     exit(EXIT_FAILURE);
 }
 
@@ -233,8 +268,41 @@ main (int argc, char **argv)
     FILE *input = NULL;
     struct termios old, new;
 
+    Options options;
+    options.fullscreen = 0;
+    options.skip_limit = 5;
+    options.window_id = getenv("WINDOWID");
+    options.terminal_app = getenv("TERM_PROGRAM");
+
+    char dir_template[] = "/tmp/ttygif.XXXXXX";
+    options.img_dir = mkdtemp(dir_template);
+    if (options.img_dir == NULL) {
+      perror("ERROR: Failed to create tmp directory.");
+      exit(EXIT_FAILURE);
+    }
+
+#ifdef OS_OSX
+    options.img_ext = "png";
+    if (options.terminal_app == NULL || !strlen(options.terminal_app)) {
+      printf("Error: TERM_PROGRAM environment variable was empty.");
+      exit(EXIT_FAILURE);
+    }
+#else
+    options.img_ext = "xwd";
+    if (options.window_id == NULL || !strlen(options.window_id)) {
+        printf("Error: WINDOWID environment variable was empty.");
+        exit(EXIT_FAILURE);
+    }
+#endif
+
     if (argc < 2) {
       usage();
+    }
+
+    if (argc >= 3) {
+      if (strstr(argv[2], "-f")) {
+        options.fullscreen = 1;
+      }
     }
 
     set_progname(argv[0]);
@@ -247,7 +315,7 @@ main (int argc, char **argv)
     new.c_lflag &= ~(ICANON | ECHO | ECHONL); /* unbuffered, no echo */
     tcsetattr(0, TCSANOW, &new); /* Make it current */
 
-    process(input, read_func);
+    process(input, read_func, options);
     tcsetattr(0, TCSANOW, &old);  /* Return terminal state */
 
     return 0;
