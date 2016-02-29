@@ -295,13 +295,13 @@ main (int argc, char **argv)
 #ifdef OS_OSX
     options.img_ext = "png";
     if (options.terminal_app == NULL || !strlen(options.terminal_app)) {
-      printf("Error: TERM_PROGRAM environment variable was empty.");
+      perror("Error: TERM_PROGRAM environment variable was empty.");
       exit(EXIT_FAILURE);
     }
 #else
     options.img_ext = "xwd";
     if (options.window_id == NULL || !strlen(options.window_id)) {
-        printf("Error: WINDOWID environment variable was empty.");
+        perror("Error: WINDOWID environment variable was empty.");
         exit(EXIT_FAILURE);
     }
 #endif
