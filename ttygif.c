@@ -146,6 +146,13 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
     int nskipped = 0;
     int skip = 0;
 
+    char dir_template[] = "/tmp/tmpgif.XXXXXX";
+    char *dir_name = mkdtemp(dir_template);
+    if (dir_name == NULL) {
+      perror("Failed to create tmp directory");
+      exit(EXIT_FAILURE);
+    }
+
     while (1) {
 
         char *buf;
@@ -182,7 +189,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func)
           }
           StringBuilder_write(sb, arg_buffer);
         }
-        if (sprintf(fname, "%05d.xwd", index) < 0) {
+        if (sprintf(fname, "%s/%d.xwd", dir_name, index) < 0) {
             perror("filename error");
             break;
         }
