@@ -190,7 +190,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
     StringBuilder_write(sb, "convert -loop 0 ");
 
     int nskipped = 0;
-    int skip = false;
+    bool skip = false;
 
     while (true) {
 
