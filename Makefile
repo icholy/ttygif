@@ -4,7 +4,10 @@ VERSION = 1.0.8
 
 UNAME := $(shell uname)
 ifeq ($(UNAME), Darwin)
-	CFLAGS += -DOS_OSX
+	CFLAGS += -DOS_DARWIN
+endif
+ifeq ($(UNAME), Linux)
+	CFLAGS += -DOS_LINUX
 endif
 
 all: ttygif

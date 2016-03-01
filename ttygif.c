@@ -116,7 +116,7 @@ clear_screen (void) {
 }
 
 int
-take_snapshot_osx(const char *img_path, Options o)
+take_snapshot_darwin(const char *img_path, Options o)
 {
   static char cmd [256];
 
@@ -167,8 +167,8 @@ take_snapshot_linux(const char *img_path, Options o)
 int
 take_snapshot(const char *img_path, Options o)
 {
-#ifdef OS_OSX
-  return take_snapshot_osx(img_path, o);
+#ifdef OS_DARWIN
+  return take_snapshot_darwin(img_path, o);
 #else 
   return take_snapshot_linux(img_path, o);
 #endif
@@ -263,7 +263,7 @@ void
 usage (void)
 {
     printf("Usage: ttygif [FILE] [-f]\n");
-#ifdef OS_OSX
+#ifdef OS_DARWIN
     printf("  -f : include window border\n");
 #endif
     exit(EXIT_FAILURE);
@@ -292,7 +292,7 @@ main (int argc, char **argv)
       exit(EXIT_FAILURE);
     }
 
-#ifdef OS_OSX
+#ifdef OS_DARWIN
     options.img_ext = "png";
     if (options.terminal_app == NULL || !strlen(options.terminal_app)) {
       perror("Error: TERM_PROGRAM environment variable was empty.");
