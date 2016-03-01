@@ -263,9 +263,11 @@ void ttyplayback (FILE *fp, ReadFunc read_func, Options o)
 void
 usage (void)
 {
-    printf("Usage: ttygif [FILE] [-f]\n");
 #ifdef OS_DARWIN
+    printf("Usage: ttygif [FILE] [-f]\n");
     printf("  -f : include window border\n");
+#else
+    printf("Usage: ttygif [FILE]\n");
 #endif
     exit(EXIT_FAILURE);
 }
