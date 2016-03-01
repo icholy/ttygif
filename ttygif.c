@@ -214,6 +214,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
           nskipped++;
         } else {
           skip = false;
+          nskipped = 0;
         }
 
         if (skip && nskipped > o.skip_limit) {
