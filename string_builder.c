@@ -60,7 +60,8 @@ void StringBuilder_write_char(StringBuilder *sb, char c)
 
 void StringBuilder_write(StringBuilder *sb, const char *s)
 {
-  for (int i = 0; s[i] != '\0'; i++) {
+  int i;
+  for (i = 0; s[i] != '\0'; i++) {
     StringBuilder_write_char(sb, s[i]);
   }
 }
