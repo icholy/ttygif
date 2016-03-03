@@ -2,9 +2,9 @@
 #define STRING_BUILDER_H
 
 typedef struct {
-  size_t size;
-  size_t cap;
-  char *s;
+    size_t size;
+    size_t cap;
+    char *s;
 } StringBuilder;
 
 #define INITIAL_CAPACITY 256
