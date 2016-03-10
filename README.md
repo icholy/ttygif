@@ -26,7 +26,6 @@ $ sudo make install
 
 ### OSX
 ``` sh
-$ brew install imagemagick ttyrec
 $ brew install https://raw.githubusercontent.com/icholy/ttygif/master/ttygif.rb
 ```
 
