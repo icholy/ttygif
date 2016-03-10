@@ -2,8 +2,8 @@ require 'formula'
 
 class Ttygif < Formula
   homepage 'https://github.com/icholy/ttygif'
-  url 'https://github.com/icholy/ttygif/archive/1.0.8.zip'
-  sha1 '00e76af8ac11d8522ff32d5c86cba07545bf54c6'
+  url 'https://github.com/icholy/ttygif/archive/1.2.1.zip'
+  sha1 'ecddb9d05a8eda43f955c7f7877c03517cef939e'
 
   depends_on 'imagemagick'
   depends_on 'ttyrec'
@@ -11,6 +11,5 @@ class Ttygif < Formula
   def install
     system 'make'
     bin.install('ttygif')
-    bin.install('concat_osx.sh')
   end
 end
