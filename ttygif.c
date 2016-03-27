@@ -121,7 +121,7 @@ take_snapshot_darwin(const char *img_path, Options o)
     static char cmd [256];
 
     if (sprintf(cmd,
-            "screencapture -l$(osascript -e 'tell app \"%s\" to id of window 1') -o -m %s &> /dev/null",
+            "screencapture -l$(osascript -e 'tell app \"%s\" to id of window 1' 2> /dev/null) -o -m %s &> /dev/null",
             o.terminal_app, img_path) < 0) {
         return -1;
     }
@@ -279,13 +279,19 @@ main (int argc, char **argv)
     ProcessFunc process = ttyplayback;
     FILE *input = NULL;
     struct termios old, new;
+    const char *term_program;
 
     Options options;
     options.fullscreen = false;
     options.skip_limit = 5;
     options.skip_threshold = 0;
     options.window_id = getenv("WINDOWID");
-    options.terminal_app = getenv("TERM_PROGRAM");
+    term_program = getenv("TERM_PROGRAM");
+    if (strcmp(term_program, "Apple_Terminal") == 0) {
+        options.terminal_app = "Terminal.app";
+    } else {
+        options.terminal_app = term_program;
+    }
     options.out_file = "tty.gif";
 
     char dir_template[] = "/tmp/ttygif.XXXXXX";
