@@ -279,17 +279,15 @@ main (int argc, char **argv)
     ProcessFunc process = ttyplayback;
     FILE *input = NULL;
     struct termios old, new;
-    const char *term_program;
 
     Options options;
     options.fullscreen = false;
     options.skip_limit = 5;
     options.skip_threshold = 0;
     options.window_id = getenv("WINDOWID");
-    term_program = getenv("TERM_PROGRAM");
-    options.terminal_app = term_program;
+    options.terminal_app = getenv("TERM_PROGRAM");
 #ifdef OS_DARWIN
-    if (strcmp(term_program, "Apple_Terminal") == 0) {
+    if (strcmp(options.terminal_app, "Apple_Terminal") == 0) {
         options.terminal_app = "Terminal.app";
     }
 #endif
