@@ -287,14 +287,11 @@ main (int argc, char **argv)
     options.skip_threshold = 0;
     options.window_id = getenv("WINDOWID");
     term_program = getenv("TERM_PROGRAM");
+    options.terminal_app = term_program;
 #ifdef OS_DARWIN
     if (strcmp(term_program, "Apple_Terminal") == 0) {
         options.terminal_app = "Terminal.app";
-    } else {
-        options.terminal_app = term_program;
     }
-#else
-    options.terminal_app = term_program;
 #endif
     options.out_file = "tty.gif";
 
