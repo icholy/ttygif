@@ -296,7 +296,6 @@ main (int argc, char **argv)
 #else
     options.terminal_app = term_program;
 #endif
-
     options.out_file = "tty.gif";
 
     char dir_template[] = "/tmp/ttygif.XXXXXX";
