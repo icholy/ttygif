@@ -286,11 +286,6 @@ main (int argc, char **argv)
     options.skip_threshold = 0;
     options.window_id = getenv("WINDOWID");
     options.terminal_app = getenv("TERM_PROGRAM");
-#ifdef OS_DARWIN
-    if (strcmp(options.terminal_app, "Apple_Terminal") == 0) {
-        options.terminal_app = "Terminal.app";
-    }
-#endif
     options.out_file = "tty.gif";
 
     char dir_template[] = "/tmp/ttygif.XXXXXX";
@@ -302,6 +297,9 @@ main (int argc, char **argv)
 
 #ifdef OS_DARWIN
     options.img_ext = "png";
+    if (strcmp(options.terminal_app, "Apple_Terminal") == 0) {
+        options.terminal_app = "Terminal.app";
+    }
     if (options.terminal_app == NULL || !strlen(options.terminal_app)) {
         perror("Error: TERM_PROGRAM environment variable was empty.");
         exit(EXIT_FAILURE);
