@@ -43,6 +43,7 @@
 #include "ttyrec.h"
 #include "io.h"
 #include "string_builder.h"
+#include "utils.h"
 
 typedef struct {
     bool fullscreen;
@@ -94,13 +95,11 @@ ttyread (FILE *fp, Header *h, char **buf)
 
     *buf = malloc(h->len);
     if (*buf == NULL) {
-        perror("Error: Out of memory (malloc)");
-        exit(EXIT_FAILURE);
+        fatalf("Error: Out of memory (malloc)");
     }
 
     if (fread(*buf, 1, h->len, fp) == 0) {
-        perror("Error: Failed to read (fread)");
-        exit(EXIT_FAILURE);
+        fatalf("Error: Failed to read (fread)");
     }
     return 1;
 }
@@ -226,18 +225,15 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
 
         if (!skip && index != 0) {
             if (sprintf(arg_buffer, " -delay %f %s", delay * 0.1, img_path) < 0) {
-                perror("Error: Failed to format 'convert' parameters");
-                exit(EXIT_FAILURE);
+                fatalf("Error: Failed to format 'convert' parameters");
             }
             StringBuilder_write(sb, arg_buffer);
         }
         if (sprintf(img_path, "%s/%d.%s", o.img_dir, index, o.img_ext) < 0) {
-            perror("Error: Failed to format filename");
-            exit(EXIT_FAILURE);
+            fatalf("Error: Failed to format filename");
         }
         if (take_snapshot(img_path, o) != 0) {
-            perror("Error: Failed to take snapshot");
-            exit(EXIT_FAILURE);
+            fatalf("Error: Failed to take snapshot");
         }
 
         index++;
@@ -250,8 +246,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
 
     printf("Creating Animated GIF ... this can take a while\n");
     if (system(sb->s) != 0) {
-        perror("Error: Failed to execute 'convert' command");
-        exit(EXIT_FAILURE);
+        fatalf("Error: Failed to execute 'convert' command");
     }
     printf("Created: %s in the current directory!\n", o.out_file);
 
@@ -294,8 +289,7 @@ main (int argc, char **argv)
     char dir_template[] = "/tmp/ttygif.XXXXXX";
     options.img_dir = mkdtemp(dir_template);
     if (options.img_dir == NULL) {
-        perror("Error: Failed to create tmp directory.");
-        exit(EXIT_FAILURE);
+        fatalf("Error: Failed to create tmp directory.");
     }
 
 #ifdef OS_DARWIN
@@ -304,14 +298,12 @@ main (int argc, char **argv)
         options.terminal_app = "Terminal.app";
     }
     if (options.terminal_app == NULL || !strlen(options.terminal_app)) {
-        perror("Error: TERM_PROGRAM environment variable was empty.");
-        exit(EXIT_FAILURE);
+        fatalf("Error: TERM_PROGRAM environment variable was empty.");
     }
 #else
     options.img_ext = "xwd";
     if (options.window_id == NULL || !strlen(options.window_id)) {
-        perror("Error: WINDOWID environment variable was empty.");
-        exit(EXIT_FAILURE);
+        fatalf("Error: WINDOWID environment variable was empty.");
     }
 #endif
 
