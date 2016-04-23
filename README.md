@@ -52,6 +52,20 @@ Both standard Terminal and iTerm apps are supported.
 $ ttygif myrecording -f
 ```
 
+## Additional Notes
+
+Installation of the xdotool is helpful when installing on Ubuntu. The default install does not include this but can be added via:
+``` sh
+$ sudo apt-get install xdotool
+```
+
+To export the WINDOWID environment variable:
+``` sh
+$ export WINDOWID=$(xdotool getwindowfocus)
+```
+This will provide the information to ttygif that it needs in order to generate the gif.
+
+
 ## Demo:
 
 ![gif](http://i.imgur.com/nvEHTgn.gif)
