@@ -54,17 +54,17 @@ $ ttygif myrecording -f
 
 ## Additional Notes
 
-Installation of the xdotool is helpful when installing on Ubuntu. The default install does not include this but can be added via:
+If you're getting `Error: WINDOWID environment variable was empty.`, then you need to manually set `WINDOWID`.
+
+``` sh
+export WINDOWID=23068679
+```
+
+If you're on Ubuntu, you can use `xdotool` to find the WINDOWID
 ``` sh
 $ sudo apt-get install xdotool
-```
-
-To export the WINDOWID environment variable:
-``` sh
 $ export WINDOWID=$(xdotool getwindowfocus)
 ```
-This will provide the information to ttygif that it needs in order to generate the gif.
-
 
 ## Demo:
 
