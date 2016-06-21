@@ -32,3 +32,18 @@ int osx_get_window_id(const char *app_name)
 
     return window_id;
 }
+
+int exec_with_output(const char *command)
+{
+    FILE *fp = popen(command, "r");
+    if (fp == NULL) {
+        fatalf("Error: failed to run command: %s", command);
+    }
+
+    char buffer[1024];
+    while(fgets(buffer, sizeof(buffer), fp) != NULL) {
+        printf("%s", buffer);
+    }
+
+    return pclose(fp);
+}
