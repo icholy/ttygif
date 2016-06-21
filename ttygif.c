@@ -245,7 +245,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
     StringBuilder_write(sb, o.out_file);
 
     printf("Creating Animated GIF ... this can take a while\n");
-    if (system(sb->s) != 0) {
+    if (exec_with_output(sb->s) != 0) {
         fatalf("Error: Failed to execute 'convert' command");
     }
     printf("Created: %s in the current directory!\n", o.out_file);
