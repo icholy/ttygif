@@ -41,7 +41,7 @@ int exec_with_output(const char *command)
     }
 
     char buffer[1024];
-    while(fgets(buffer, sizeof(buffer), fp) != NULL) {
+    while (fgets(buffer, sizeof(buffer), fp) != NULL) {
         printf("%s", buffer);
     }
 
