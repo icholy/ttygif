@@ -243,6 +243,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
 
     StringBuilder_write(sb, " -layers Optimize ");
     StringBuilder_write(sb, o.out_file);
+    StringBuilder_write(sb, " 2>&1");
 
     printf("Creating Animated GIF ... this can take a while\n");
     if (exec_with_output(sb->s) != 0) {
