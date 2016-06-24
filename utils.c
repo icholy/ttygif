@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#include "string_builder.h"
 
 void fatalf(const char *format, ...)
 {

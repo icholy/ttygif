@@ -47,6 +47,7 @@
 
 typedef struct {
     bool fullscreen;
+    bool debug;
     int skip_limit;
     int skip_threshold;
     const char *terminal_app;
@@ -117,17 +118,27 @@ clear_screen (void) {
 }
 
 int
+system_exec(const char *cmd, Options o)
+{
+    if (o.debug) {
+        printf("DEBUG: %s\n", cmd);
+        return 0;
+    }
+    return exec_with_output(cmd);
+}
+
+int
 take_snapshot_darwin(const char *img_path, Options o)
 {
     static char cmd [256];
 
     if (sprintf(cmd,
-            "screencapture -l$(osascript -e 'tell app \"%s\" to id of window 1' 2> /dev/null) -o -m %s &> /dev/null",
-            o.terminal_app, img_path) < 0) {
+            "screencapture -l$(%s) -o -m %s &> /dev/null",
+            o.window_id, img_path) < 0) {
         return -1;
     }
 
-    if (system(cmd) != 0) {
+    if (system_exec(cmd, o) != 0) {
         return -1;
     }
 
@@ -139,7 +150,7 @@ take_snapshot_darwin(const char *img_path, Options o)
         }
     }
 
-    if (system(cmd) != 0) {
+    if (system_exec(cmd, o) != 0) {
         return -1;
     }
 
@@ -158,7 +169,7 @@ take_snapshot_linux(const char *img_path, Options o)
         return -1;
     }
 
-    if (system(cmd) != 0) {
+    if (system_exec(cmd, o) != 0) {
         return -1;
     }
 
@@ -204,7 +215,9 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
             break;
         }
 
-        write_func(buf, h.len);
+        if (!o.debug) {
+            write_func(buf, h.len);
+        }
 
         if (index != 0) {
             delay = ttydelay(prev, h.tv);
@@ -246,7 +259,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
     StringBuilder_write(sb, " 2>&1");
 
     printf("Creating Animated GIF ... this can take a while\n");
-    if (exec_with_output(sb->s) != 0) {
+    if (system_exec(sb->s, o) != 0) {
         fatalf("Error: Failed to execute 'convert' command");
     }
     printf("Created: %s in the current directory!\n", o.out_file);
@@ -285,6 +298,7 @@ main (int argc, char **argv)
     options.skip_threshold = 0;
     options.window_id = getenv("WINDOWID");
     options.terminal_app = getenv("TERM_PROGRAM");
+    options.debug = getenv("TTYGIF_DEBUG") != NULL;
     options.out_file = "tty.gif";
 
     char dir_template[] = "/tmp/ttygif.XXXXXX";
@@ -292,6 +306,7 @@ main (int argc, char **argv)
     if (options.img_dir == NULL) {
         fatalf("Error: Failed to create tmp directory.");
     }
+
 
 #ifdef OS_DARWIN
     options.img_ext = "png";
