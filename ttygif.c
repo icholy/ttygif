@@ -50,7 +50,6 @@ typedef struct {
     bool debug;
     int skip_limit;
     int skip_threshold;
-    const char *terminal_app;
     const char *window_id;
     const char *img_ext;
     const char *img_dir;
@@ -296,8 +295,6 @@ main (int argc, char **argv)
     options.fullscreen = false;
     options.skip_limit = 5;
     options.skip_threshold = 0;
-    options.window_id = getenv("WINDOWID");
-    options.terminal_app = getenv("TERM_PROGRAM");
     options.debug = getenv("TTYGIF_DEBUG") != NULL;
     options.out_file = "tty.gif";
 
@@ -310,14 +307,20 @@ main (int argc, char **argv)
 
 #ifdef OS_DARWIN
     options.img_ext = "png";
-    if (strcmp(options.terminal_app, "Apple_Terminal") == 0) {
-        options.terminal_app = "Terminal.app";
-    }
-    if (options.terminal_app == NULL || !strlen(options.terminal_app)) {
+    const char *terminal_app = getenv("TERM_PROGRAM");
+    if (terminal_app == NULL || !strlen(terminal_app)) {
         fatalf("Error: TERM_PROGRAM environment variable was empty.");
     }
+    if (strcmp(terminal_app, "Apple_Terminal") == 0) {
+        terminal_app = "Terminal.app";
+    }
+    int window_id = osx_get_window_id(terminal_app);
+    char window_id_buffer[256];
+    sprintf(window_id_buffer, "%d", window_id);
+    options.window_id = window_id_buffer;
 #else
     options.img_ext = "xwd";
+    options.window_id = getenv("WINDOWID");
     if (options.window_id == NULL || !strlen(options.window_id)) {
         fatalf("Error: WINDOWID environment variable was empty.");
     }
