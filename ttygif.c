@@ -192,7 +192,9 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
     int delay = 0;
     struct timeval prev;
 
-    clear_screen();
+    if (!o.debug) {
+        clear_screen();
+    }
 
     setbuf(stdout, NULL);
     setbuf(fp, NULL);
