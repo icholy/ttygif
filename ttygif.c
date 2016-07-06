@@ -326,6 +326,10 @@ main (int argc, char **argv)
     }
 #endif
 
+    if (options.debug) {
+        printf("window_id: %s\n", options.window_id);
+    }
+
     if (argc < 2) {
         usage();
     }
