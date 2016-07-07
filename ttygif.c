@@ -116,14 +116,16 @@ clear_screen (void) {
     printf("\e[1;1H\e[2J");
 }
 
-int
+void
 system_exec(const char *cmd, Options o)
 {
     if (o.debug) {
         printf("DEBUG: %s\n", cmd);
-        return 0;
+        return;
     }
-    return exec_with_output(cmd);
+    if (system(cmd) != 0) {
+        fatalf("failed to execute: %s\n", cmd);
+    }
 }
 
 int
@@ -137,9 +139,7 @@ take_snapshot_darwin(const char *img_path, Options o)
         return -1;
     }
 
-    if (system_exec(cmd, o) != 0) {
-        return -1;
-    }
+    system_exec(cmd, o);
 
     if (!o.fullscreen) {
         if (sprintf(cmd,
@@ -149,9 +149,7 @@ take_snapshot_darwin(const char *img_path, Options o)
         }
     }
 
-    if (system_exec(cmd, o) != 0) {
-        return -1;
-    }
+    system_exec(cmd, o);
 
     return 0;
 }
@@ -168,10 +166,7 @@ take_snapshot_linux(const char *img_path, Options o)
         return -1;
     }
 
-    if (system_exec(cmd, o) != 0) {
-        return -1;
-    }
-
+    system_exec(cmd, o);
     return 0;
 }
 
@@ -260,9 +255,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
     StringBuilder_write(sb, " 2>&1");
 
     printf("Creating Animated GIF ... this can take a while\n");
-    if (system_exec(sb->s, o) != 0) {
-        fatalf("Error: Failed to execute 'convert' command");
-    }
+    system_exec(sb->s, o);
     printf("Created: %s in the current directory!\n", o.out_file);
 
     StringBuilder_free(sb);
