@@ -70,6 +70,16 @@ $ export WINDOWID=$(xdotool getwindowfocus)
 
 ![gif](http://i.imgur.com/nvEHTgn.gif)
 
+## Debugging
+
+If you're having issues, then export the `TTYGIF_DEBUG` env variable.
+
+``` sh
+export TTYGIF_DEBUG=1
+```
+
+This will print out all the commands it's trying to run.
+
 ## Credits
 
 The idea and approach was adapted from [tty2gif](https://bitbucket.org/antocuni/tty2gif)
