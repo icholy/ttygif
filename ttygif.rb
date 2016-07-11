@@ -2,8 +2,8 @@ require 'formula'
 
 class Ttygif < Formula
   homepage 'https://github.com/icholy/ttygif'
-  url 'https://github.com/icholy/ttygif/archive/1.2.1.zip'
-  sha1 'ecddb9d05a8eda43f955c7f7877c03517cef939e'
+  url 'https://github.com/icholy/ttygif/archive/1.3.0.zip'
+  sha1 'f2412cf43d00f39555c6ee79c4ee6a469050de3b'
 
   depends_on 'imagemagick'
   depends_on 'ttyrec'
