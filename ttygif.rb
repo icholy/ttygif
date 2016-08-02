@@ -3,7 +3,7 @@ require 'formula'
 class Ttygif < Formula
   homepage 'https://github.com/icholy/ttygif'
   url 'https://github.com/icholy/ttygif/archive/1.3.0.zip'
-  sha1 'f2412cf43d00f39555c6ee79c4ee6a469050de3b'
+  sha256 'a833cb7798b26ad0652658be24322b07629282452f822f659871e4f4bcdd8173'
 
   depends_on 'imagemagick'
   depends_on 'ttyrec'
