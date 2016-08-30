@@ -3,6 +3,8 @@
 > ttygif converts a ttyrec file into gif files.
 > It's a stripped down version of ttyplay that captures every frame.
 
+## Demo
+
 ![gif](http://i.imgur.com/nvEHTgn.gif)
 
 ## Setup
