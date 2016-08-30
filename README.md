@@ -1,7 +1,9 @@
-# TTYGIF
+![](ttygif.png)
 
 > ttygif converts a ttyrec file into gif files.
 > It's a stripped down version of ttyplay that captures every frame.
+
+![gif](http://i.imgur.com/nvEHTgn.gif)
 
 ## Setup
 
@@ -65,10 +67,6 @@ If you're on Ubuntu, you can use `xdotool` to find the WINDOWID
 $ sudo apt-get install xdotool
 $ export WINDOWID=$(xdotool getwindowfocus)
 ```
-
-## Demo:
-
-![gif](http://i.imgur.com/nvEHTgn.gif)
 
 ## Debugging
 
