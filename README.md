@@ -28,6 +28,17 @@ $ make
 $ sudo make install
 ```
 
+### Arch Linux
+``` sh
+$ git clone https://aur.archlinux.org/ttyrec
+$ cd ttyrec
+$ makepkg -i
+$ cd ..
+$ git clone https://aur.archlinux.org/ttygif
+$ cd ttygif
+$ makepkg -is
+```
+
 ### OSX
 ``` sh
 $ brew install https://raw.githubusercontent.com/icholy/ttygif/master/ttygif.rb
