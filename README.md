@@ -20,8 +20,8 @@ $ sudo make install
 
 ### Fedora/Redhat
 ``` sh
-$ sudo yum install ImageMagick gcc
-$ # install ttyrec from source ~> https://github.com/mjording/ttyrec
+$ sudo dnf install ImageMagick gcc
+$ # install ttyrec from source patched ~> https://github.com/mattwilmott/ttyrec
 $ git clone https://github.com/icholy/ttygif.git
 $ cd ttygif
 $ make
