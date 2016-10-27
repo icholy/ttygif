@@ -1,6 +1,7 @@
 CC = gcc
 CFLAGS = -O2 -Wall
 VERSION = 1.0.8
+PREFIX ?= /usr/local
 
 UNAME := $(shell uname)
 ifeq ($(UNAME), Darwin)
@@ -16,7 +17,8 @@ ttygif: ttygif.o io.o string_builder.o utils.o
 	$(CC) $(CFLAGS) -o ttygif ttygif.o io.o string_builder.o utils.o
 
 install: ttygif
-	cp ttygif /usr/local/bin/ttygif
+	mkdir -p $(PREFIX)/bin
+	cp ttygif $(PREFIX)/bin/ttygif
 
 clean:
 	rm -f *.o ttygif ttyrecord *~
