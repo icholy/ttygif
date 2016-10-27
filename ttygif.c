@@ -175,7 +175,7 @@ take_snapshot(const char *img_path, Options o)
 {
 #ifdef OS_DARWIN
     return take_snapshot_darwin(img_path, o);
-#else 
+#else
     return take_snapshot_linux(img_path, o);
 #endif
 }
@@ -275,10 +275,11 @@ usage (void)
 #else
     printf("Usage: ttygif [FILE]\n");
 #endif
-    exit(EXIT_FAILURE);
+    printf("  -h, --help : print this help\n");
+    printf("  -v, --version : print version\n");
 }
 
-int 
+int
 main (int argc, char **argv)
 {
     ReadFunc read_func  = ttyread;
@@ -327,6 +328,20 @@ main (int argc, char **argv)
 
     if (argc < 2) {
         usage();
+
+        exit(EXIT_FAILURE);
+    }
+
+    if (argc == 2) {
+        if (strstr(argv[1], "-h") || strstr(argv[1], "--help")) {
+            usage();
+            exit(EXIT_SUCCESS);
+        }
+
+        if (strstr(argv[1], "-v") || strstr(argv[1], "--version")) {
+            printf("1.3.0\n");
+            exit(EXIT_SUCCESS);
+        }
     }
 
     if (argc >= 3) {
@@ -337,7 +352,7 @@ main (int argc, char **argv)
 
     set_progname(argv[0]);
     input = efopen(argv[1], "r");
-    
+
     assert(input != NULL);
 
     tcgetattr(0, &old); /* Get current terminal state */
