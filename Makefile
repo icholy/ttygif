@@ -1,6 +1,6 @@
 CC = gcc
-CFLAGS = -O2 -Wall
-VERSION = 1.0.8
+VERSION = '"1.3.0"'
+CFLAGS = -O2 -Wall -DVERSION=$(VERSION)
 PREFIX ?= /usr/local
 
 UNAME := $(shell uname)
