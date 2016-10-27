@@ -339,7 +339,7 @@ main (int argc, char **argv)
         }
 
         if (strstr(argv[1], "-v") || strstr(argv[1], "--version")) {
-            printf("1.3.0\n");
+            printf(VERSION"\n");
             exit(EXIT_SUCCESS);
         }
     }
