@@ -1,5 +1,5 @@
 CC = gcc
-VERSION = '"1.3.0"'
+VERSION = '"1.4.0"'
 CFLAGS = -O2 -Wall -DVERSION=$(VERSION)
 PREFIX ?= /usr/local
 
