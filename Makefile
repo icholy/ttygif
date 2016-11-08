@@ -17,8 +17,8 @@ ttygif: ttygif.o io.o string_builder.o utils.o
 	$(CC) $(CFLAGS) -o ttygif ttygif.o io.o string_builder.o utils.o
 
 install: ttygif
-	mkdir -p $(PREFIX)/bin
-	cp ttygif $(PREFIX)/bin/ttygif
+	install -d $(PREFIX)/bin
+	install -m755 ttygif $(PREFIX)/bin/ttygif
 
 clean:
 	rm -f *.o ttygif ttyrecord *~
