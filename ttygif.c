@@ -271,7 +271,7 @@ usage (void)
 {
 #ifdef OS_DARWIN
     printf("Usage: ttygif [FILE] [-f]\n");
-    printf("  -f : include window border\n");
+    printf("  -f, --fullscreen : include window border\n");
 #else
     printf("Usage: ttygif [FILE]\n");
 #endif
@@ -345,7 +345,7 @@ main (int argc, char **argv)
     }
 
     if (argc >= 3) {
-        if (strstr(argv[2], "-f")) {
+        if (strstr(argv[2], "-f") || strstr(argv[2], "--fullscreen")) {
             options.fullscreen = true;
         }
     }
