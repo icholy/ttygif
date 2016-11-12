@@ -39,9 +39,9 @@ $ cd ttygif
 $ makepkg -is
 ```
 
-### OSX
+### macOS
 ``` sh
-$ brew install https://raw.githubusercontent.com/icholy/ttygif/master/ttygif.rb
+$ brew install ttygif
 ```
 
 ## Usage:
