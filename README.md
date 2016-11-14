@@ -1,7 +1,7 @@
 ![](ttygif.png)
 
 > ttygif converts a ttyrec file into gif files.
-> It's a stripped down version of ttyplay that captures every frame.
+> It's a stripped down version of ttyplay that screenshots every frame.
 
 ## Demo
 
