@@ -30,11 +30,11 @@ $ sudo make install
 
 ### Arch Linux
 ``` sh
-$ git clone https://aur.archlinux.org/ttyrec
+$ git clone https://aur.archlinux.org/ttyrec.git
 $ cd ttyrec
 $ makepkg -i
 $ cd ..
-$ git clone https://aur.archlinux.org/ttygif
+$ git clone https://aur.archlinux.org/ttygif.git
 $ cd ttygif
 $ makepkg -is
 ```
