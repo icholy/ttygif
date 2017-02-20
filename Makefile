@@ -1,6 +1,6 @@
 CC = gcc
 VERSION = '"1.4.0"'
-CFLAGS = -O2 -Wall -DVERSION=$(VERSION)
+CFLAGS += -O2 -Wall -DVERSION=$(VERSION)
 PREFIX ?= /usr/local
 
 UNAME := $(shell uname)
