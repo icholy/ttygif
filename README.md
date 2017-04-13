@@ -29,12 +29,11 @@ $ sudo make install
 ```
 
 ### OpenSUSE Leap
-
 ```sh
 $ zypper addrepo http://download.opensuse.org/repositories/utilities/openSUSE_Leap_42.2/utilities.repo
 $ zypper refresh
 $ zypper install ttygif
-``
+```
 
 ### Arch Linux
 ``` sh
