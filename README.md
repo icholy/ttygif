@@ -28,6 +28,20 @@ $ make
 $ sudo make install
 ```
 
+### OpenSUSE Leap 42.2
+```sh
+# zypper addrepo http://download.opensuse.org/repositories/utilities/openSUSE_Leap_42.2/utilities.repo
+# zypper refresh
+# zypper install ttygif
+```
+
+### OpenSUSE Leap 42.1
+```
+zypper addrepo http://download.opensuse.org/repositories/utilities/openSUSE_Leap_42.1/utilities.repo
+zypper refresh
+zypper install ttygif
+```
+
 ### Arch Linux
 ``` sh
 $ git clone https://aur.archlinux.org/ttyrec.git
