@@ -238,14 +238,18 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
             }
             StringBuilder_write(sb, arg_buffer);
         }
-        if (sprintf(img_path, "%s/%d.%s", o.img_dir, index, o.img_ext) < 0) {
-            fatalf("Error: Failed to format filename");
+        if (!skip) {
+            if (sprintf(img_path, "%s/%d.%s", o.img_dir, index, o.img_ext) < 0) {
+                fatalf("Error: Failed to format filename");
+            }
+            if (take_snapshot(img_path, o) != 0) {
+                fatalf("Error: Failed to take snapshot");
+            }
         }
-        if (take_snapshot(img_path, o) != 0) {
-            fatalf("Error: Failed to take snapshot");
+        if (index == 0 || !skip) {
+            index++;
         }
 
-        index++;
         prev = h.tv;
         free(buf);
     }
