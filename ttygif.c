@@ -232,13 +232,13 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
             skip = false;
         }
 
-        if (!skip && index != 0) {
-            if (sprintf(arg_buffer, " -delay %f %s", delay * 0.1, img_path) < 0) {
-                fatalf("Error: Failed to format 'convert' parameters");
-            }
-            StringBuilder_write(sb, arg_buffer);
-        }
         if (!skip) {
+            if (index != 0) {
+                if (sprintf(arg_buffer, " -delay %f %s", delay * 0.1, img_path) < 0) {
+                    fatalf("Error: Failed to format 'convert' parameters");
+                }
+                StringBuilder_write(sb, arg_buffer);
+            }
             if (sprintf(img_path, "%s/%d.%s", o.img_dir, index, o.img_ext) < 0) {
                 fatalf("Error: Failed to format filename");
             }
