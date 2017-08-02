@@ -48,8 +48,9 @@
 typedef struct {
     bool fullscreen;
     bool debug;
-    int skip_limit;
-    int skip_threshold;
+    int skip_limit;       // Skip at most this many consecutive frames
+    int skip_threshold;   // Skip frames shown for at most this long (because they're intermediate states)
+    int last_frame_delay; // How long to show the last frame before looping, in milliseconds
     const char *window_id;
     const char *img_ext;
     const char *img_dir;
@@ -200,14 +201,19 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
     int nskipped = 0;
     bool skip = false;
 
+    char img_path[256] = "";
+    char arg_buffer[256] = "";
+    
     while (true) {
 
         char *buf;
         Header h;
-        static char img_path[256];
-        static char arg_buffer[256];
 
         if (read_func(fp, &h, &buf) == 0) {
+            snprintf(arg_buffer, sizeof(arg_buffer), " -delay %f ", o.last_frame_delay*0.1);
+            StringBuilder_write(sb, arg_buffer);
+            StringBuilder_write(sb, img_path);
+
             break;
         }
 
@@ -219,7 +225,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
             delay = ttydelay(prev, h.tv);
         }
 
-        if (delay <= o.skip_threshold) {
+        if (index>0 && delay <= o.skip_threshold) {
             skip = true;
             nskipped++;
         } else {
@@ -233,7 +239,12 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
         }
 
         if (!skip && index != 0) {
-            if (sprintf(arg_buffer, " -delay %f %s", delay * 0.1, img_path) < 0) {
+            if (sprintf(arg_buffer, " -delay %f", delay * 0.1) < 0) {
+                fatalf("Error: Failed to format 'convert' parameters");
+            }
+            StringBuilder_write(sb, arg_buffer);
+            
+            if (sprintf(arg_buffer, " %s", img_path) < 0) {
                 fatalf("Error: Failed to format 'convert' parameters");
             }
             StringBuilder_write(sb, arg_buffer);
@@ -246,6 +257,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
                 fatalf("Error: Failed to take snapshot");
             }
         }
+        
         if (index == 0 || !skip) {
             index++;
         }
@@ -253,10 +265,12 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
         prev = h.tv;
         free(buf);
     }
-
+    
     StringBuilder_write(sb, " -layers Optimize ");
     StringBuilder_write(sb, o.out_file);
     StringBuilder_write(sb, " 2>&1");
+    
+    fprintf(stderr, "Running: %s\n", StringBuilder_str(sb));
 
     printf("Creating Animated GIF ... this can take a while\n");
     system_exec(sb->s, o);
@@ -295,6 +309,7 @@ main (int argc, char **argv)
     options.fullscreen = false;
     options.skip_limit = 5;
     options.skip_threshold = 0;
+    options.last_frame_delay = 1000;
     options.debug = getenv("TTYGIF_DEBUG") != NULL;
     options.out_file = "tty.gif";
 
