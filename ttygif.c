@@ -210,9 +210,8 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
         Header h;
 
         if (read_func(fp, &h, &buf) == 0) {
-            snprintf(arg_buffer, sizeof(arg_buffer), " -delay %f ", o.last_frame_delay*0.1);
+            snprintf(arg_buffer, sizeof(arg_buffer), " -delay %f %s", o.last_frame_delay*0.1, img_path);
             StringBuilder_write(sb, arg_buffer);
-            StringBuilder_write(sb, img_path);
 
             break;
         }
@@ -225,7 +224,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
             delay = ttydelay(prev, h.tv);
         }
 
-        if (index>0 && delay <= o.skip_threshold) {
+        if (index > 0 && delay <= o.skip_threshold) {
             skip = true;
             nskipped++;
         } else {
@@ -239,12 +238,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
         }
 
         if (!skip && index != 0) {
-            if (sprintf(arg_buffer, " -delay %f", delay * 0.1) < 0) {
-                fatalf("Error: Failed to format 'convert' parameters");
-            }
-            StringBuilder_write(sb, arg_buffer);
-            
-            if (sprintf(arg_buffer, " %s", img_path) < 0) {
+            if (sprintf(arg_buffer, " -delay %f %s", delay * 0.1, img_path) < 0) {
                 fatalf("Error: Failed to format 'convert' parameters");
             }
             StringBuilder_write(sb, arg_buffer);
@@ -265,13 +259,11 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
         prev = h.tv;
         free(buf);
     }
-    
+
     StringBuilder_write(sb, " -layers Optimize ");
     StringBuilder_write(sb, o.out_file);
     StringBuilder_write(sb, " 2>&1");
     
-    fprintf(stderr, "Running: %s\n", StringBuilder_str(sb));
-
     printf("Creating Animated GIF ... this can take a while\n");
     system_exec(sb->s, o);
     printf("Created: %s in the current directory!\n", o.out_file);
