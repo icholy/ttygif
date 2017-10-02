@@ -51,6 +51,7 @@ typedef struct {
     int skip_limit;       // Skip at most this many consecutive frames
     int skip_threshold;   // Skip frames shown for at most this long (because they're intermediate states)
     int last_frame_delay; // How long to show the last frame before looping, in milliseconds
+    double speed;         // Speed to replay the recording defaults to 1.0
     const char *window_id;
     const char *img_ext;
     const char *img_dir;
@@ -221,7 +222,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
         }
 
         if (index != 0) {
-            delay = ttydelay(prev, h.tv);
+            delay = ttydelay(prev, h.tv) / o.speed;
         }
 
         if (index > 0 && delay <= o.skip_threshold) {
@@ -285,6 +286,7 @@ usage (void)
 #else
     printf("Usage: ttygif [FILE]\n");
 #endif
+    printf("  -s, --speed : Set speed [1.0]\n");
     printf("  -h, --help : print this help\n");
     printf("  -v, --version : print version\n");
 }
@@ -304,6 +306,7 @@ main (int argc, char **argv)
     options.last_frame_delay = 1000;
     options.debug = getenv("TTYGIF_DEBUG") != NULL;
     options.out_file = "tty.gif";
+    options.speed = 1.0;
 
     char dir_template[] = "/tmp/ttygif.XXXXXX";
     options.img_dir = mkdtemp(dir_template);
@@ -356,8 +359,18 @@ main (int argc, char **argv)
     }
 
     if (argc >= 3) {
-        if (strstr(argv[2], "-f") || strstr(argv[2], "--fullscreen")) {
-            options.fullscreen = true;
+        for (int i=0; i<argc; i++)
+        {
+            if (strstr(argv[i], "-f") || strstr(argv[i], "--fullscreen")) {
+                options.fullscreen = true;
+            }
+
+            if ((strstr(argv[i], "-s") || strstr(argv[i], "--speed")) && argc > i+1) {
+                char *end;
+                double speed = strtod(argv[i+1], &end);
+                if (end > argv[i+1])
+                    options.speed = speed;
+            }
         }
     }
 
