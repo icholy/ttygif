@@ -20,5 +20,8 @@ install: ttygif
 	install -d $(PREFIX)/bin
 	install -m755 ttygif $(PREFIX)/bin/ttygif
 
+uninstall: $(PREFIX)/bin/ttygif
+	rm -f $(PREFIX)/bin/ttygif
+
 clean:
 	rm -f *.o ttygif ttyrecord *~
