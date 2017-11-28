@@ -46,6 +46,11 @@ $ cd ttygif
 $ makepkg -is
 ```
 
+With yaourt installed:
+```sh
+$ yaourt -S ttyrec ttygif
+```
+
 ### macOS
 ``` sh
 $ brew install ttygif
