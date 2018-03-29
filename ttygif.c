@@ -359,7 +359,10 @@ main (int argc, char **argv)
     }
 
     if (argc >= 3) {
-        for (int i=0; i<argc; i++)
+        
+        int i;
+
+        for (i=0; i<argc; i++)
         {
             if (strstr(argv[i], "-f") || strstr(argv[i], "--fullscreen")) {
                 options.fullscreen = true;
