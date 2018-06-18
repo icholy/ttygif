@@ -11,7 +11,7 @@
 
 ### Debian/Ubuntu
 ``` sh
-$ sudo apt-get install imagemagick ttyrec gcc x11-apps
+$ sudo apt-get install imagemagick ttyrec gcc x11-apps make git
 $ git clone https://github.com/icholy/ttygif.git
 $ cd ttygif
 $ make
