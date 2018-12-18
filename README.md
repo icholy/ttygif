@@ -18,9 +18,9 @@ $ make
 $ sudo make install
 ```
 
-### Fedora/Redhat
+### Fedora/CentOS/RHEL
 ``` sh
-$ sudo dnf install ImageMagick gcc
+$ sudo dnf install ImageMagick gcc xorg-x11-apps
 $ # install ttyrec from source patched ~> https://github.com/mattwilmott/ttyrec
 $ git clone https://github.com/icholy/ttygif.git
 $ cd ttygif
@@ -72,7 +72,7 @@ $ ttyrec myrecording
 $ ttygif myrecording
 ```
 
-On OSX optionally you can set a -f flag which will bypass cropping which is needed for terminal apps which aren't full screen. 
+On OSX optionally you can set a -f flag which will bypass cropping which is needed for terminal apps which aren't full screen.
 Both standard Terminal and iTerm apps are supported.
 
 ``` sh
@@ -108,4 +108,3 @@ This will print out all the commands it's trying to run.
 The idea and approach was adapted from [tty2gif](https://bitbucket.org/antocuni/tty2gif)
 
 ![](http://i.imgur.com/9et8daN.jpg)
-
