@@ -18,9 +18,9 @@ $ make
 $ sudo make install
 ```
 
-### Fedora/Redhat
+### Fedora/Redhat/CentOS
 ``` sh
-$ sudo dnf install ImageMagick gcc
+$ sudo dnf install ImageMagick gcc xorg-x11-apps
 $ # install ttyrec from source patched ~> https://github.com/mattwilmott/ttyrec
 $ git clone https://github.com/icholy/ttygif.git
 $ cd ttygif
@@ -72,7 +72,7 @@ $ ttyrec myrecording
 $ ttygif myrecording
 ```
 
-On OSX optionally you can set a -f flag which will bypass cropping which is needed for terminal apps which aren't full screen. 
+On OSX optionally you can set a -f flag which will bypass cropping which is needed for terminal apps which aren't full screen.
 Both standard Terminal and iTerm apps are supported.
 
 ``` sh
@@ -93,6 +93,11 @@ $ sudo apt-get install xdotool
 $ export WINDOWID=$(xdotool getwindowfocus)
 ```
 
+If you're on RHEL/CentOS, and getting `xwd not exists error`, then you need to install additional package:
+```sh
+$ sudo yum install xorg-x11-apps
+```
+
 ## Debugging
 
 If you're having issues, then export the `TTYGIF_DEBUG` env variable.
@@ -108,4 +113,3 @@ This will print out all the commands it's trying to run.
 The idea and approach was adapted from [tty2gif](https://bitbucket.org/antocuni/tty2gif)
 
 ![](http://i.imgur.com/9et8daN.jpg)
-
