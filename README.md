@@ -18,7 +18,7 @@ $ make
 $ sudo make install
 ```
 
-### Fedora/Redhat/CentOS
+### Fedora/CentOS/RHEL
 ``` sh
 $ sudo dnf install ImageMagick gcc xorg-x11-apps
 $ # install ttyrec from source patched ~> https://github.com/mattwilmott/ttyrec
@@ -91,11 +91,6 @@ If you're on Ubuntu, you can use `xdotool` to find the WINDOWID
 ``` sh
 $ sudo apt-get install xdotool
 $ export WINDOWID=$(xdotool getwindowfocus)
-```
-
-If you're on RHEL/CentOS, and getting `xwd not exists error`, then you need to install additional package:
-```sh
-$ sudo yum install xorg-x11-apps
 ```
 
 ## Debugging
