@@ -136,7 +136,7 @@ take_snapshot_darwin(const char *img_path, Options o)
     static char cmd [256];
 
     if (sprintf(cmd,
-            "screencapture -l%s -o -m %s &> /dev/null",
+            "screencapture -x -l%s -o -m %s &> /dev/null",
             o.window_id, img_path) < 0) {
         return -1;
     }
