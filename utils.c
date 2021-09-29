@@ -13,6 +13,19 @@ void fatalf(const char *format, ...)
     exit(EXIT_FAILURE);
 }
 
+int exec_command(StringBuilder *sb, const char *command)
+{
+    FILE *fp = popen(command, "r");
+    if (fp == NULL) {
+        fatalf("Error: failed to run command: %s", command);
+    }
+    char buffer[1024];
+    while (fgets(buffer, sizeof(buffer), fp) != NULL) {
+        StringBuilder_write(sb, buffer);
+    }
+    return pclose(fp);
+}
+
 char * osx_get_window_id()
 {
     const char *term = getenv("TERM_PROGRAM");
@@ -22,26 +35,26 @@ char * osx_get_window_id()
     if (strcmp(term, "Apple_Terminal") == 0) {
         term = "Terminal.app";
     }
-
     char command[1024];
     sprintf(command,
             "osascript -so -e 'tell app \"%s\" to id of window 1' 2> /dev/null",
             term);
-
-    FILE *fp = popen(command, "r");
-    if (fp == NULL) {
-        fatalf("Error: failed to run command: %s", command);
-    }
-
-    char *window_id = (char*) malloc(256 * sizeof(char));
-    if (fscanf(fp, "%s", window_id) != 1) {
-        fatalf("Error: failed to parse window id: %s", command);
-    }
-
-    pclose(fp);
-
-    return window_id;
+    StringBuilder *sb = StringBuilder_new();
+    exec_command(sb, command);
+    return StringBuilder_str(sb);
 }
+
+char * linux_get_window_id()
+{
+    const char *window_id_env = getenv("WINDOWID");
+    if (window_id_env != NULL && strlen(window_id_env)) {
+        char *window_id = (char*) malloc(256 * sizeof(char));
+        strncpy(window_id, window_id_env, 256);
+        return window_id;
+    }
+    return NULL;
+}
+
 
 int exec_with_output(const char *command)
 {
