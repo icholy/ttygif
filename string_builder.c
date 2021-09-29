@@ -83,14 +83,17 @@ StringBuilder_trim(StringBuilder *sb)
             break;
         }
     }
-    for (end = sb->size - 1; end > start; end--) {
-        if (!isspace(sb->s[end-1])) {
+    for (end = sb->size-2; end > start; end--) {
+        if (!isspace(sb->s[end])) {
             break;
         }
     }
-    int len = end-start;
-    char *s = StringBuilder_malloc(len);
-    memcpy(s, &sb->s[start], sizeof(char) * len);
+    int size = end - start;
+    char *s = StringBuilder_malloc(size);
+    strncpy(s, sb->s + start, size);
+    s[size] = '\0';
     free(sb->s);
     sb->s = s;
+    sb->cap = size;
+    sb->size = size;
 }
