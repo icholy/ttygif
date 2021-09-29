@@ -88,7 +88,7 @@ StringBuilder_trim(StringBuilder *sb)
             break;
         }
     }
-    int size = end - start;
+    int size = end - start + 1;
     char *s = StringBuilder_malloc(size);
     strncpy(s, sb->s + start, size);
     s[size] = '\0';
