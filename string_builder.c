@@ -72,3 +72,24 @@ StringBuilder_write(StringBuilder *sb, const char *s)
         StringBuilder_write_char(sb, s[i]);
     }
 }
+
+void
+StringBuilder_trim(StringBuilder *sb)
+{
+    int start, end;
+    for (start = 0; start < sb->size; start++) {
+        if (!isspace(sb->s[start])) {
+            break;
+        }
+    }
+    for (end = sb->size - 1; end > start; end--) {
+        if (!isspace(sb->s[end])) {
+            break;
+        }
+    }
+    int len = end-start;
+    char *s = StringBuilder_malloc(len);
+    strncpy(s, &s[start], len)
+    free(sb->s);
+    sb->s = s;
+}

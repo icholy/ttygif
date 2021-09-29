@@ -14,6 +14,7 @@ void StringBuilder_free(StringBuilder *sb);
 char * StringBuilder_str(StringBuilder *sb);
 void StringBuilder_write_char(StringBuilder *sb, char c);
 void StringBuilder_write(StringBuilder *sb, const char *s);
+void StringBuilder_trim(StringBuilder *sb);
 
 #endif /* STRING_BUILDER_H */
 
