@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "string_builder.h"
 
@@ -83,13 +84,13 @@ StringBuilder_trim(StringBuilder *sb)
         }
     }
     for (end = sb->size - 1; end > start; end--) {
-        if (!isspace(sb->s[end])) {
+        if (!isspace(sb->s[end-1])) {
             break;
         }
     }
     int len = end-start;
     char *s = StringBuilder_malloc(len);
-    strncpy(s, &s[start], len)
+    memcpy(s, &sb->s[start], sizeof(char) * len);
     free(sb->s);
     sb->s = s;
 }

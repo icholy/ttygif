@@ -159,7 +159,7 @@ take_snapshot_darwin(const char *img_path, Options o)
 int
 take_snapshot_linux(const char *img_path, Options o)
 {
-    static char cmd [256];
+    static char cmd [1024];
 
     // ensure text has been written before taking screenshot
     usleep(50000);

@@ -44,6 +44,7 @@ char * osx_get_window_id()
     if (code != 0) {
         fatalf("failed to run command: %s", command);
     }
+    StringBuilder_trim(sb);
     return StringBuilder_str(sb);
 }
 
@@ -59,6 +60,7 @@ char * linux_get_window_id()
     if (code != 0) {
         fatalf("Error: WINDOWID environment variable was empty.");
     }
+    StringBuilder_trim(sb);
     return StringBuilder_str(sb);
 }
 
