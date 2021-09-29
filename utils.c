@@ -56,7 +56,7 @@ char * linux_get_window_id()
         StringBuilder_write(sb, window_id);
         return StringBuilder_str(sb);
     }
-    int code = exec_command(sb, "xdotool getactivewindow");
+    int code = exec_command(sb, "xdotool getwindowfocus");
     if (code != 0) {
         fatalf("Error: WINDOWID environment variable was empty.");
     }
