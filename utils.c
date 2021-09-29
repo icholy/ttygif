@@ -17,7 +17,7 @@ int exec_command(StringBuilder *sb, const char *command)
 {
     FILE *fp = popen(command, "r");
     if (fp == NULL) {
-        fatalf("Error: failed to run command: %s", command);
+        return -1;
     }
     char buffer[1024];
     while (fgets(buffer, sizeof(buffer), fp) != NULL) {
@@ -40,19 +40,26 @@ char * osx_get_window_id()
             "osascript -so -e 'tell app \"%s\" to id of window 1' 2> /dev/null",
             term);
     StringBuilder *sb = StringBuilder_new();
-    exec_command(sb, command);
+    int code = exec_command(sb, command);
+    if (code != 0) {
+        fatalf("failed to run command: %s", command);
+    }
     return StringBuilder_str(sb);
 }
 
 char * linux_get_window_id()
 {
-    const char *window_id_env = getenv("WINDOWID");
-    if (window_id_env != NULL && strlen(window_id_env)) {
-        char *window_id = (char*) malloc(256 * sizeof(char));
-        strncpy(window_id, window_id_env, 256);
-        return window_id;
+    StringBuilder *sb = StringBuilder_new();
+    const char *window_id = getenv("WINDOWID");
+    if (window_id != NULL && strlen(window_id)) {
+        StringBuilder_write(sb, window_id);
+        return StringBuilder_str(sb);
     }
-    return NULL;
+    int code = exec_command(sb, "xdotool getactivewindow");
+    if (code != 0) {
+        fatalf("Error: WINDOWID environment variable was empty.");
+    }
+    return StringBuilder_str(sb);
 }
 
 

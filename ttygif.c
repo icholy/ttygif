@@ -320,10 +320,7 @@ main (int argc, char **argv)
     options.window_id = osx_get_window_id();
 #else
     options.img_ext = "xwd";
-    options.window_id = getenv("WINDOWID");
-    if (options.window_id == NULL || !strlen(options.window_id)) {
-        fatalf("Error: WINDOWID environment variable was empty.");
-    }
+    options.window_id = linux_get_window_id();
 #endif
 
     if (options.debug) {
