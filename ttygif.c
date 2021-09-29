@@ -317,17 +317,7 @@ main (int argc, char **argv)
 
 #ifdef OS_DARWIN
     options.img_ext = "png";
-    const char *terminal_app = getenv("TERM_PROGRAM");
-    if (terminal_app == NULL || !strlen(terminal_app)) {
-        fatalf("Error: TERM_PROGRAM environment variable was empty.");
-    }
-    if (strcmp(terminal_app, "Apple_Terminal") == 0) {
-        terminal_app = "Terminal.app";
-    }
-    int window_id = osx_get_window_id(terminal_app);
-    char window_id_buffer[256];
-    sprintf(window_id_buffer, "%d", window_id);
-    options.window_id = window_id_buffer;
+    options.window_id = osx_get_window_id();
 #else
     options.img_ext = "xwd";
     options.window_id = getenv("WINDOWID");
