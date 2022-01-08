@@ -262,6 +262,7 @@ ttyplay (FILE *fp, ReadFunc read_func, WriteFunc write_func, Options o)
     }
 
     StringBuilder_write(sb, " -layers Optimize ");
+    StringBuilder_write(sb, "GIF:");
     StringBuilder_write(sb, o.out_file);
     StringBuilder_write(sb, " 2>&1");
     
