@@ -3,7 +3,8 @@
 #define _UTILS_H
 
 void fatalf(const char *format, ...);
-int osx_get_window_id(const char *app_name);
+char * osx_get_window_id();
+char * linux_get_window_id();
 int exec_with_output(const char *command);
 
 #endif /* _UTILS_H */

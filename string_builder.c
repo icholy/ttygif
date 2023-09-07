@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "string_builder.h"
 
@@ -71,4 +72,28 @@ StringBuilder_write(StringBuilder *sb, const char *s)
     for (i = 0; s[i] != '\0'; i++) {
         StringBuilder_write_char(sb, s[i]);
     }
+}
+
+void
+StringBuilder_trim(StringBuilder *sb)
+{
+    int start, end;
+    for (start = 0; start < sb->size; start++) {
+        if (!isspace(sb->s[start])) {
+            break;
+        }
+    }
+    for (end = sb->size-2; end > start; end--) {
+        if (!isspace(sb->s[end])) {
+            break;
+        }
+    }
+    int size = end - start + 1;
+    char *s = StringBuilder_malloc(size);
+    strncpy(s, sb->s + start, size);
+    s[size] = '\0';
+    free(sb->s);
+    sb->s = s;
+    sb->cap = size;
+    sb->size = size;
 }
